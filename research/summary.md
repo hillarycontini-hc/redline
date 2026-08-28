@@ -35,15 +35,33 @@ Source: https://www.teamblind.com/post/incorrect-lease-agreement-ywopcisv
 "The doc is signed so am locked" is the sentence the product exists to prevent. Note the timing —
 a *month* after signing. This is a pre-signature detection problem.
 
-### Pain 3 — Getting paid at all, which contract terms are supposed to guarantee
+### Pain 3 — The terms were readable, but nobody could get through 45 pages to find them
 
-Freelancers Union survey (n=5,358): **71% struggled to collect payment at least once in their
-career**; **59% were owed $50,000+ in unpaid invoices**.
+> "Buried in the contract (45 pages of a mortgage) was the process for having the contract canceled."
 
-Source: https://www.onlabor.org/wp-content/uploads/2017/05/FU_NonpaymentReport_r3.pdf
+Source: r/TimeshareOwners — https://www.reddit.com/r/TimeshareOwners/comments/1jizrbs/hilton_grand_vacation_timeshare/mjo724v/
 
-This is the largest quantified pain found in the whole research effort. It is real, it is expensive,
-and it is adjacent to — but not identical to — the pain Redline addresses. See section 5.
+And the same failure with a direct financial consequence:
+
+> "According to the fine print, I screwed myself with Lula... I had 2 claims denied for 2 separate
+> accident's that occurred 10 days apart."
+
+Source: r/turo — https://www.reddit.com/r/turo/comments/oo4x8n/rental_car_llc_insurance_abi_lula_arrc_and_gmi/jw6bzme/
+
+This is the pain Redline is actually shaped for. The information was *there*. Length and density are
+what defeated the reader — not deception, and not a missing document. That is a summarization and
+retrieval problem, which is a solvable one.
+
+### Also worth holding onto — the near-miss
+
+> "The lease they gave us initially said no pets. It was an administrative error but if I had signed
+> without reading we would have technically been in violation of our lease..."
+
+Source: r/PetPeeves — https://www.reddit.com/r/PetPeeves/comments/1kcepqw/when_someone_gets_annoyed_when_i_actually_read/mq82enx/
+
+The only person in this entire research set who caught a problem *before* signing did it by reading
+the document carefully — and describes being socially penalized for taking the time. That is the
+behavior Redline automates, and evidence that people who do it feel it is worth doing.
 
 ---
 
@@ -142,16 +160,13 @@ real, is a floor that would make this a very thin business.
 
 Five things. Take these seriously.
 
-**1. The direct-testimony leg of the research substantially failed.**
-Agent 1 returned **4 findings against a target of 8**, and one of those is a secondary-source blog
-roundup rather than real testimony. Reddit — r/legaladvice, r/freelance, r/smallbusiness, r/Tenant,
-the four most obvious communities — was **unfetchable** in this environment, and search returned only
-AI paraphrase, not post text. Hacker News returned 429, Quora returned 403. Nothing was fabricated to
-fill the gap, which is correct, but it means **the "real people describing real pain" evidence base is
-three tenant anecdotes.** That is an anecdote count, not a validated pain. It is not evidence against
-your hypothesis — but it is conspicuously not evidence for it either, and you asked to be anchored in
-real pain before writing a PRD. You do not yet have that anchor. Re-running Agent 1 with working
-Reddit access is the highest-value next step available.
+**1. The direct testimony is now real, but it is thinner than the numbers suggest.**
+*(Updated after a second run — the first attempt failed because Reddit was unfetchable; a re-run via
+the PullPush archive API recovered it.)* Agent 1 now returns **9 sourced findings across four
+segments**, six of them verbatim Reddit comments with permalinks. That is a genuine anchor and it did
+not exist an hour ago. But nine anecdotes is still nine anecdotes. They confirm the pain **exists and
+is describable in users' own words**; they do not establish that it is frequent, urgent, or
+monetizable. Treat this as "the pain is real" evidence, not "the market is real" evidence.
 
 **2. Searches for the specific clause horror stories came back empty.**
 Agent 1 explicitly searched for non-compete, indemnification, auto-renewal, and arbitration testimony
@@ -167,13 +182,20 @@ largely knew their payment terms; the client just did not pay. Redline reads a d
 sign it. It does not make anyone pay you. There is a real risk of building for the pain you can
 address rather than the pain people actually feel most.
 
-**4. The segment with the most vivid pain may have the least ability to pay.**
-Three of four usable quotes are renters. But Agent 4 found that low-income renters' binding constraint
-is *cash for rent*, not access to legal review — implying near-zero willingness to pay despite acute
-pain (Stanford Law Review, cited in `who-would-pay.md`). Meanwhile the segment that demonstrably pays
-for legal subscriptions is small business owners, whose pain generated no verbatim quotes here. **The
-people who hurt most and the people who pay are, on this evidence, not the same people.** That is the
-central strategic problem in this research.
+**4. Your best-paying segment is the one with no testimony at all. This got worse, not better.**
+Agent 4 named **freelancers the single strongest segment** — ~73–83M people, documented pain, no
+counsel, and a $200–$600 lawyer anchor to price against. After two research runs, the number of
+verbatim freelancer quotes found is **zero.** Both attempts failed for mechanical reasons
+(search returned only law-firm content; then PullPush rate-limited every `subreddit=freelance` and
+`subreddit=smallbusiness` query), so this is **absence of evidence, not evidence of absence** — but it
+is still a hole exactly where your business case is load-bearing.
+
+Meanwhile 4 of 9 quotes are renters, and Agent 4 found low-income renters' binding constraint is
+*cash for rent*, not access to legal review — near-zero willingness to pay despite acute pain
+(Stanford Law Review, cited in `who-would-pay.md`). **The people you have proof are hurting and the
+people you have reason to think would pay are still, on this evidence, not the same people.** This
+remains the central strategic problem, and closing it means getting freelancer testimony
+specifically — not more testimony in general.
 
 **5. No one was found saying they would pay for this.**
 Agent 4 found **zero primary-source stated willingness-to-pay data and zero "too expensive" quotes.**
@@ -191,24 +213,29 @@ is too late for them.
 
 | Leg | Findings vs. target | Confidence |
 |---|---|---|
-| Who has this pain | 4 / 8 (1 weak) | **Low** — Reddit inaccessible; tenant-skewed; small n |
+| Who has this pain | 9 / 8 *(after re-run)* | **Medium** — real verbatim quotes across 4 segments, but n=9 and **zero freelancers** |
 | What goes wrong | 8 / 8 | **Medium-high** — strong regulator data, but mixed measurement bases |
 | What already exists | 8 / 8 | **Medium-high** — pricing partly from secondary sources |
 | Who would pay | 8 / 8 | **Medium** — all anchors are proxies; no primary WTP data |
 
-**Verdict:** the evidence does **not** say don't build this. The competitive gap is real and
-specific — nobody serves one person with one document at a consumer price, and the four-feature
-bundle is unoccupied. But the evidence also does **not yet** support the hypothesis as stated. The
-pain is documented mostly by regulators and adjacent proxies rather than by users in their own words,
-the loudest sufferers are the least able to pay, and no one has been observed saying they would pay
-anything at all.
+**Verdict:** the evidence does **not** say don't build this, and it is stronger than it was before the
+re-run. People describe this pain in their own words, unprompted, across renters, small business
+owners, and employees. The competitive gap is real and specific — nobody serves one person with one
+document at a consumer price, and the four-feature bundle is unoccupied.
 
-**Before writing the PRD, close two gaps:** (a) re-run the direct-testimony research with working
-access to Reddit and HN, and (b) find or generate primary willingness-to-pay evidence. Also
-research ChatGPT-as-substitute, which is the free competitor this study never examined.
+But the hypothesis is still not validated where it matters commercially. **You have proof of pain and
+no proof of payment.** Not one person in this research said they would pay anything, and the segment
+your pricing case depends on — freelancers — produced no testimony in two attempts.
+
+**Before writing the PRD, close two gaps:** (a) freelancer testimony specifically, via PullPush with
+freelancer queries front-loaded and spaced 60s+ apart to avoid the rate limiter that killed this run;
+and (b) primary willingness-to-pay evidence — someone, anyone, naming a price. Also research
+ChatGPT-as-substitute, the free competitor this study never examined and the most likely reason a
+prospect declines to pay.
 
 ---
 
-*Four agents, Sonnet, run in parallel. Search budgets used: 22 / 12 / 9 / 6 tool-uses. Each agent's
+*Four agents, Sonnet, run in parallel; Agent 1 re-run separately against the PullPush Reddit archive
+API after reddit.com proved unfetchable (WebFetch blocked, `.json` 403, Redlib 403). Each agent's
 "What I could not find" section is preserved in its own file and should be read alongside this
 summary.*

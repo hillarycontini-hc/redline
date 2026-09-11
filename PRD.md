@@ -1,10 +1,10 @@
 # Redline — Product Brief
 
-**Status: draft, pending sign-off.** The three segment decisions in §6 were recommended by
-the grilling session and adopted by default — they were not explicitly chosen. Rounds two and
-three of that session never ran, so **§5 (red lines) and the confidence rules in §4 are derived
-from the research, not from lived experience.** They are the sections most likely to be wrong,
-and the ones to argue with first.
+**Status: final, signed off 2026-09-11.** The three segment decisions in §6 were confirmed
+explicitly. The grilling rounds on §4 and §5 ran on 2026-09-11 and every recommendation was
+accepted; the resulting decisions are recorded in those sections and in `docs/spec.md`. §5 is
+still derived from research rather than lived experience, and the gold set in §4 is where that
+gets tested.
 
 ---
 
@@ -116,14 +116,27 @@ few or no flags and say the document looks reasonable. **A tool that always find
 being believed**, and the failure mode is invisible — users don't report inflated flags, they
 just stop trusting the output and leave.
 
-*(§4.4's threshold is unset because the round-three discussion never happened. It needs a number
-before it's testable.)*
+**Threshold:** on each clean document, zero Critical flags, at most two flags of any tier, and a
+summary that says the document looks reasonable. Any clean document exceeding that fails the run.
+
+### 4.5 How these are run
+
+- **4.1 is a CI gate.** "Verbatim" means a match after normalising whitespace and quote
+  characters, nothing looser. Any miss fails the build.
+- **4.2 and 4.4 are release gates**, run by hand against the gold set before each release.
+- **4.3 is tracked** per release, not gating, because it needs a second opinion each time.
+- **Gold set, v1:** 10 real freelance agreements or leases with dangerous clauses identified in
+  advance, plus the 5 clean documents. Reviewer is the product owner; a lawyer spot-checks the
+  Critical tier only. Grow the set once the method is proven.
 
 ---
 
 ## 5. Red lines — which clauses get flagged, and how hard
 
-**Derived from the research, not from experience. Needs your sign-off.**
+**Signed off 2026-09-11.** This list is the seeded default every account starts with. The reader
+can add, delete, or re-tier any entry, and a reader's entry overrides the seeded tier for that
+clause type. The same list applies to every document type; leases and ToS get no separate list
+in this version (§6.1). Worth-knowing flags never carry a counter-offer.
 
 ### What makes a clause dangerous rather than merely unusual
 
@@ -152,7 +165,6 @@ severity model.
 | **Non-compete / exclusivity** | Restricts future earning, not just this engagement. 18–20% of the US workforce is bound by one ([FTC](https://www.ftc.gov/news-events/news/press-releases/2024/04/fact-sheet-ftcs-proposed-final-noncompete-rule)). Enforceability varies by state — Redline flags, it does not opine on enforceability. |
 | **Payment terms worse than net-30, with no late fee** | 71% of freelancers have struggled to collect at least once; 59% were owed $50k+ ([Freelancers Union](https://www.onlabor.org/wp-content/uploads/2017/05/FU_NonpaymentReport_r3.pdf)). The hardest number in the research. |
 | **Unilateral termination with no kill fee** | Client can walk; freelancer absorbs the scheduled time. Asymmetric by construction. |
-| **Unlimited revisions / undefined scope** | Converts a fixed fee into unbounded work. **No research data** — included on structure. |
 
 ### Worth knowing — mention, no counter-offer required
 

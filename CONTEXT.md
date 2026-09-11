@@ -3,9 +3,8 @@
 The words this project uses, and what they mean. Use these terms in code, tests, issues, and
 UI copy. Where a synonym is listed as avoided, don't drift to it.
 
-**Status: proposed, not agreed.** Extracted from `PRD.md`. The grilling round that would have
-settled this vocabulary went unanswered, so these are working definitions. Change them freely —
-but change them *here*, so the rest of the project follows.
+**Status: agreed 2026-09-11**, alongside the PRD sign-off. Extracted from `PRD.md`. Change
+these terms if you must — but change them *here*, so the rest of the project follows.
 
 ---
 

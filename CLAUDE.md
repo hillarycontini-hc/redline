@@ -6,7 +6,9 @@ reader what they are actually signing.
 ## Read first
 
 - `research/summary.md` — the user research. Read before deciding what to build.
-- `PRD.md` — the brief. Does not exist yet. Read before building once it does.
+- `PRD.md` — the brief, signed off. Read before building.
+- `docs/spec.md` — the build spec derived from the brief. Build from this.
+- `CONTEXT.md` — the vocabulary. Use these words in code, tests, and copy.
 
 ## Settled decisions — do not reinterpret
 
@@ -57,4 +59,5 @@ worthless when the text it points at was misread.
 
 - The default branch is `master`, not `main`.
 - The repo is **public**. Assume anything committed is world-readable.
-- This folder is inside OneDrive. Expect sync-conflict files; do not commit them.
+- The repo moved out of OneDrive on 2026-09-11 and now lives at `C:\Users\ericj\Claude\redline`.
+  If a sync-conflict file ever turns up anyway, do not commit it.

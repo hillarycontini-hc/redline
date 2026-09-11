@@ -266,8 +266,8 @@ Five gaps. Each is a place this brief is guessing.
    to pay, and there is no evidence on how well it actually works.
 
 4. **No frequency data for liability caps, indemnity, exclusivity, or fee escalators** — four
-   clause types from the original hypothesis. Two of them appear in §5 on structural reasoning
-   alone.
+   clause types from the original hypothesis. One of them, uncapped indemnity, appears in §5 on
+   structural reasoning alone.
 
 5. **The clause types with the best statistics have the worst stories.** Searches for
    first-person non-compete, indemnity, auto-renewal, and arbitration accounts returned only

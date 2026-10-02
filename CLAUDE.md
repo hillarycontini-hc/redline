@@ -7,7 +7,7 @@ reader what they are actually signing.
 
 - `research/summary.md` — the user research. Read before deciding what to build.
 - `PRD.md` — the brief, signed off. Read before building.
-- `docs/spec.md` — the build spec derived from the brief. Build from this.
+- `.scratch/redline-v1/spec.md` — the build spec derived from the brief. Build from this.
 - `CONTEXT.md` — the vocabulary. Use these words in code, tests, and copy.
 
 ## Settled decisions — do not reinterpret

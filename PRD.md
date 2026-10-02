@@ -2,9 +2,9 @@
 
 **Status: final, signed off 2026-09-11.** The three segment decisions in §6 were confirmed
 explicitly. The grilling rounds on §4 and §5 ran on 2026-09-11 and every recommendation was
-accepted; the resulting decisions are recorded in those sections and in `docs/spec.md`. §5 is
-still derived from research rather than lived experience, and the gold set in §4 is where that
-gets tested.
+accepted; the resulting decisions are recorded in those sections and in
+`.scratch/redline-v1/spec.md`. §5 is still derived from research rather than lived experience,
+and the gold set in §4 is where that gets tested.
 
 ---
 

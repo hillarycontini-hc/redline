@@ -1,6 +1,6 @@
 # Redline
 
-Live: https://redline-iwsfhma1q-contini1.vercel.app/
+Live: https://redline-rust.vercel.app/
 
 A web app that reads a contract, lease, freelance agreement, or terms of service
 and tells the reader what they are actually signing. Every risk flag quotes the

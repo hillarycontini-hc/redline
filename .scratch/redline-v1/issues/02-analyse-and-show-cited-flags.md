@@ -21,20 +21,20 @@ their source sentences.
 `OPENROUTER_MODEL`. The id is read from the environment and is never hardcoded.
 This ticket is no longer gated.
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Dropping or selecting a plain-text file shows its extracted text on screen before
+- [x] Dropping or selecting a plain-text file shows its extracted text on screen before
       any analysis runs.
-- [ ] No request carries the file itself. Only extracted text leaves the browser, and
+- [x] No request carries the file itself. Only extracted text leaves the browser, and
       no route accepts a file body.
-- [ ] Running the analysis returns a summary and flags, reaching the model only through
+- [x] Running the analysis returns a summary and flags, reaching the model only through
       OpenRouter with the model id read from the environment.
-- [ ] Each flag shows its severity as one of the three words, its consequence in plain
+- [x] Each flag shows its severity as one of the three words, its consequence in plain
       language, and its source sentence quoted from the document.
-- [ ] Flags appear Critical first, then Serious, then Worth knowing, and within a tier
+- [x] Flags appear Critical first, then Serious, then Worth knowing, and within a tier
       in the order they appear in the document.
-- [ ] A flag whose source sentence could not be located in the document does not appear
+- [x] A flag whose source sentence could not be located in the document does not appear
       on screen, and the refusal is recorded rather than discarded.
-- [ ] No severity is shown as a number, and the page avoids the words listed as not ours
+- [x] No severity is shown as a number, and the page avoids the words listed as not ours
       in the domain vocabulary.
-- [ ] The framework starter content is gone from the entry page.
+- [x] The framework starter content is gone from the entry page.

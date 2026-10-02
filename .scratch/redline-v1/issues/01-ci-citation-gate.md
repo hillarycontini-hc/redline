@@ -13,7 +13,7 @@ and watch the build fail and name the offending quote.
 
 **Blocked by:** None — can start immediately.
 
-**Status:** done
+**Status:** done, except the branch-protection criterion, which needs the repo owner (see BUILD-REPORT.md)
 
 - [x] The application scaffold, the analysis module, the parsing module, the gold set,
       and their tests are committed to master.

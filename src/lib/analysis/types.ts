@@ -46,6 +46,17 @@ export interface Analysis {
   dropped: DroppedFlag[];
 }
 
+/**
+ * What POST /api/analyze sends back. Dropped flags are counted so the reader
+ * is told how many were refused, but their sentences are never sent: an
+ * unlocatable sentence is the one thing the reader must not be shown.
+ */
+export interface AnalyzeResponse {
+  summary: string;
+  flags: Flag[];
+  droppedCount: number;
+}
+
 /** What the model is asked to return. Validated before it becomes a Flag. */
 export interface ModelFlag {
   clauseType: string;

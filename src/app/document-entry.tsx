@@ -1,7 +1,9 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useId, useRef, useState } from "react";
 import styles from "./page.module.css";
+import { stashHandoff } from "@/lib/handoff.ts";
 import { checkUsable, extractText } from "@/lib/parse/extract.ts";
 
 /**
@@ -17,11 +19,14 @@ type State =
   | { kind: "error"; message: string };
 
 const PREVIEW_CHARS = 700;
+const PASTED = "Pasted text";
 
 export function DocumentEntry() {
+  const router = useRouter();
   const fieldId = useId();
   const fileRef = useRef<HTMLInputElement>(null);
   const [text, setText] = useState("");
+  const [name, setName] = useState(PASTED);
   const [dropping, setDropping] = useState(false);
   const [state, setState] = useState<State>({ kind: "idle" });
 
@@ -40,8 +45,17 @@ export function DocumentEntry() {
   async function readFile(file: File) {
     setState({ kind: "reading" });
     const result = await extractText(file);
-    if (result.ok) setText(result.text);
+    if (result.ok) {
+      setText(result.text);
+      setName(file.name);
+    }
     show(result);
+  }
+
+  /** The text goes over in sessionStorage, never in the URL: a URL gets logged. */
+  function handOver() {
+    stashHandoff({ name, text });
+    router.push("/read");
   }
 
   return (
@@ -57,6 +71,7 @@ export function DocumentEntry() {
         value={text}
         onChange={(event) => {
           setText(event.target.value);
+          setName(PASTED);
           setState({ kind: "idle" });
         }}
         onDragOver={(event) => {
@@ -113,6 +128,11 @@ export function DocumentEntry() {
             read in this browser. Nothing has been sent anywhere.
           </p>
           <p className={`${styles.entryPreview} docType`}>{state.preview}</p>
+          <p className={styles.entryGo}>
+            <button type="button" className={styles.submit} onClick={handOver}>
+              Read it line by line
+            </button>
+          </p>
         </div>
       )}
 

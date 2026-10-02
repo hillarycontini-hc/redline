@@ -1,0 +1,66 @@
+/* The working frame. One sheet, opened by an account head across the top.
+   Direction contract: .impeccable/surfaces/src-app-app-layout-tsx.md.
+   Tokens come from globals.css; nothing here declares a colour of its own. */
+
+.page {
+  padding: clamp(0.75rem, 2.5vw, 2.5rem);
+}
+
+.sheet {
+  max-width: 78rem;
+  margin: 0 auto;
+  background: var(--sheet);
+  border: 1px solid var(--rule-soft);
+  box-shadow: var(--sheet-shadow);
+}
+
+/* ---------------------------------------------------------------- account head */
+
+.account {
+  font-family: var(--font-archivo-narrow), var(--font-archivo), sans-serif;
+  display: flex;
+  align-items: baseline;
+  gap: 0.9rem;
+  padding: 0.6rem clamp(1.25rem, 3vw, 2.1rem);
+  background: var(--rule);
+  color: var(--sheet);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.accountName,
+.accountKind {
+  white-space: nowrap;
+}
+
+.accountRule {
+  flex: 1;
+  min-width: 0.75rem;
+  height: 1px;
+  background: var(--rule-inverse);
+}
+
+.accountLink {
+  color: var(--sheet);
+  font-size: 0.74rem;
+  letter-spacing: 0.12em;
+  text-decoration: underline;
+  text-underline-offset: 0.22em;
+  white-space: nowrap;
+}
+
+@media (max-width: 40rem) {
+  .account {
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+    letter-spacing: 0.16em;
+  }
+
+  /* The rule still runs the width of the band, so the head reads as a ledger
+     line and the link drops to its own row beneath it. */
+  .accountRule {
+    min-width: 1.5rem;
+  }
+}

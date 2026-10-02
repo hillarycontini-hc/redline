@@ -196,6 +196,11 @@
   line-height: 1.45;
 }
 
+/* The hand-over to the reading surface, once the reader has seen the text. */
+.entryGo {
+  margin-top: 0.9rem;
+}
+
 /* ---------------------------------------------------------------- statement */
 
 .statement {

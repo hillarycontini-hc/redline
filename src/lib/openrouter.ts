@@ -24,6 +24,14 @@ export function openRouterCaller(): CallModel {
         model,
         messages,
         temperature: 0,
+        // Pin the provider so the same text gets the same reading. Fallbacks
+        // would quietly swap in a host that ignores the parameters below.
+        provider: {
+          order: ["fireworks"],
+          allow_fallbacks: false,
+          require_parameters: true,
+        },
+        reasoning: { effort: "low" },
         response_format: { type: "json_object" },
       }),
     });

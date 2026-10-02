@@ -18,6 +18,8 @@
 
   /* Ledger green owns every rule, column head, and frame. */
   --rule: #0e5c45;
+  /* The submit button's hover fill, and nothing else. */
+  --rule-deep: #0a4634;
   --rule-soft: rgba(14, 92, 69, 0.22);
   --rule-hair: rgba(14, 92, 69, 0.12);
 
@@ -36,6 +38,12 @@
   --field-serious: rgba(138, 90, 7, 0.15);
   --field-worth: rgba(91, 74, 138, 0.12);
   --field-head: rgba(14, 92, 69, 0.12);
+
+  /* A hairline drawn on the ledger-green band, where green-on-green is invisible. */
+  --rule-inverse: rgba(243, 246, 240, 0.5);
+
+  /* The system's only elevation: the statement sheet against the ledger pad. */
+  --sheet-shadow: 0 18px 44px -26px rgba(22, 24, 26, 0.5);
 
   --measure: 68ch;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);

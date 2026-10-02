@@ -29,8 +29,8 @@ corepack pnpm run smoke        # fixture contract through the real pipeline
 | 02 | Analyse a plain-text document and show cited flags | **done**, verified against the live model |
 | 03 | Open a flag and see what it owes you | **done**, verified against the live model |
 | 04 | Question box | **done**, verified against the live model |
-| 05 | PDF and DOCX, with a clear refusal for scanned PDFs | in progress |
-| 06 | Release gates run against a full gold set | not started |
+| 05 | PDF and DOCX, with a clear refusal for scanned PDFs | **done**, verified in the browser against a real PDF |
+| 06 | Release gates run against a full gold set | in progress |
 | 07 | Sign in and see your library | not started |
 | 08 | Analyses save and reopen | not started |
 | 09 | Editable red lines drive the analysis | not started |
@@ -244,3 +244,42 @@ will reach real readers under deadline pressure.
 **The remedy OpenRouter itself suggests is a bring-your-own-key integration** — add a Fireworks
 key at `https://openrouter.ai/settings/integrations` and the limits become yours rather than the
 shared pool's. That is an account change with a cost attached, so it is yours to make, not mine.
+
+### D7 — PDF.js's `legacy` build, and why the extra 1.2 MB is right
+
+The PDF path imports `pdfjs-dist/legacy/build/pdf.mjs` rather than the generic build. That carries
+about 1.2 MB of polyfill, so it needs a reason.
+
+The generic build calls `Uint8Array.prototype.toHex`, which Node 24 does not have — it throws on
+every document under `node --test` — and which only reached browsers in late 2025. Two
+consequences, and the second is the one that decided it:
+
+1. The test suite could not run the real parser at all. It would have had to mock `pdfjs-dist`,
+   which is mocking the thing under test, and would have proved nothing.
+2. Any reader a year behind on their browser would get a failure rather than a reading.
+
+The cost is paid only by someone who actually opens a PDF — `pdf.ts` is a dynamic import, so a
+reader who pastes their agreement never downloads a byte of it. **If you later decide to require
+a 2026-or-newer browser, switching to the generic build is a one-line change and saves 1.2 MB.**
+
+### D8 — A third refusal: the file that will not open
+
+A damaged or password-locked PDF was going to be reported as a scan. Those are different problems
+with different things to do about them, and telling someone their contract is a photograph when it
+is actually password-locked sends them looking in the wrong place. There are now three outcomes: a
+kind we do not read, a PDF whose pages are pictures, and a file that would not open at all.
+
+### A latent bug caught on the way through ticket 05
+
+Git was corrupting the hand-built PDF fixture. `text=auto` reads a file as text when it is mostly
+ASCII and carries no NUL byte, which a small PDF is, so it was converting line endings on
+checkout. A PDF's cross-reference table is a list of byte offsets into the file, so one converted
+line ending shifts every offset after it and the document stops opening.
+
+A fresh checkout already differed from the working tree at byte 9. The parse tests passed here and
+would have failed on your machine. `.gitattributes` now says `*.pdf binary` and `*.docx binary`
+explicitly, and all four binary fixtures were verified byte-identical across a fresh checkout.
+
+Worth knowing because it is the same class of problem as the LF pinning at the start of this run:
+**the thing that breaks a build like this is rarely the code, it is the bytes arriving different
+on the next machine.**

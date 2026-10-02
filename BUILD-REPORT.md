@@ -28,8 +28,8 @@ corepack pnpm run smoke        # fixture contract through the real pipeline
 | 01 | CI keeps every flag honest | **done**, except branch protection (needs you) |
 | 02 | Analyse a plain-text document and show cited flags | **done**, verified against the live model |
 | 03 | Open a flag and see what it owes you | **done**, verified against the live model |
-| 04 | Question box | in progress |
-| 05 | PDF and DOCX, with a clear refusal for scanned PDFs | not started |
+| 04 | Question box | **done**, verified against the live model |
+| 05 | PDF and DOCX, with a clear refusal for scanned PDFs | in progress |
 | 06 | Release gates run against a full gold set | not started |
 | 07 | Sign in and see your library | not started |
 | 08 | Analyses save and reopen | not started |
@@ -226,3 +226,21 @@ What I did verify instead, and what still stands:
 click a flag near the bottom of the list. The thing to watch is whether the document column holds
 its place and the marked sentence is actually on screen. That is the one behaviour I specified and
 could not see with my own eyes.
+
+### The shared provider pool rate-limits this model, hard
+
+Three of my live checks came back `429` from Fireworks:
+
+> `z-ai/glm-5.3-flash is temporarily rate-limited upstream ... limit_source: upstream_provider_shared_pool`
+
+Because the provider is pinned with `allow_fallbacks: false` — which you asked for, and which is
+right, since a fallback host would quietly give the same document a different reading — there is
+no second provider to absorb this. The call fails instead.
+
+The build handles it correctly: a `429` is now its own error with its own words, so a reader is
+told the service is busy rather than being sent to look for a fault in their document. But this
+will reach real readers under deadline pressure.
+
+**The remedy OpenRouter itself suggests is a bring-your-own-key integration** — add a Fireworks
+key at `https://openrouter.ai/settings/integrations` and the limits become yours rather than the
+shared pool's. That is an account change with a cost attached, so it is yours to make, not mine.

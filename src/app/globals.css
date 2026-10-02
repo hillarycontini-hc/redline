@@ -1,0 +1,141 @@
+/**
+ * Redline's visual world: Statement of Account.
+ * Ledger stock as the ground, ledger green owning the structure, red reserved
+ * for what a clause costs you. Tokens live here; layout lives in the module.
+ * Durable decisions are recorded in DESIGN.md.
+ */
+
+:root {
+  /* Ground and surfaces. The page is a columnar ledger pad, never white. */
+  --ground: #d7e2d1;
+  --sheet: #f3f6f0;
+  --sheet-sunk: #e9efe5;
+
+  /* Ink. Secondary is tinted from the ground's hue, never gray. */
+  --ink: #16181a;
+  --ink-2: #49514a;
+  --ink-3: #5a635a;
+
+  /* Ledger green owns every rule, column head, and frame. */
+  --rule: #0e5c45;
+  --rule-soft: rgba(14, 92, 69, 0.22);
+  --rule-hair: rgba(14, 92, 69, 0.12);
+
+  /* Red is what it costs you. Critical only. */
+  --due: #b8261a;
+  --due-soft: rgba(184, 38, 26, 0.12);
+
+  /* Carbon violet: copies, notes, and the things that are only worth knowing. */
+  --carbon: #5b4a8a;
+
+  --measure: 68ch;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  height: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100%;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-archivo), system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Every specimen of the document itself is set as the document, not as UI. */
+.docType {
+  font-family: var(--font-tinos), "Times New Roman", serif;
+  font-variant-numeric: normal;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+  letter-spacing: -0.03em;
+  line-height: 1.04;
+  font-weight: 800;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+a {
+  color: var(--rule);
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1px;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+/* Browser surfaces belong to the design too. */
+::selection {
+  background: var(--rule);
+  color: var(--sheet);
+}
+
+:focus-visible {
+  outline: 2px solid var(--rule);
+  outline-offset: 3px;
+}
+
+textarea,
+input {
+  caret-color: var(--due);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--rule-soft) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--rule-soft);
+  border: 3px solid transparent;
+  background-clip: content-box;
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--rule);
+  background-clip: content-box;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

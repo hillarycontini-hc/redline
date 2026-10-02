@@ -1,0 +1,540 @@
+/* The landing page as one statement of account. Direction contract lives in
+   .impeccable/surfaces/src-app-page-tsx.md. */
+
+.page {
+  padding: clamp(0.75rem, 2.5vw, 2.5rem);
+}
+
+.sheet {
+  max-width: 78rem;
+  margin: 0 auto;
+  background: var(--sheet);
+  border: 1px solid var(--rule-soft);
+  box-shadow: 0 18px 44px -26px rgba(22, 24, 26, 0.5);
+}
+
+/* ---------------------------------------------------------------- account head */
+
+.head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.85fr);
+  border-bottom: 3px double var(--rule);
+}
+
+.headLeft {
+  padding: clamp(1.25rem, 3vw, 2.1rem);
+  border-right: 1px solid var(--rule-soft);
+}
+
+.account {
+  font-family: var(--font-archivo-narrow), var(--font-archivo), sans-serif;
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  color: var(--rule);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.accountRule {
+  flex: 1;
+  height: 1px;
+  background: var(--rule-soft);
+}
+
+.hook {
+  font-size: clamp(2.05rem, 5vw, 3.35rem);
+  max-width: 23ch;
+}
+
+.hookSub {
+  margin-top: 1rem;
+  max-width: 62ch;
+  color: var(--ink-2);
+  font-size: clamp(1rem, 1.25vw, 1.08rem);
+  line-height: 1.55;
+}
+
+
+/* ---------------------------------------------------------------- the entry */
+
+.entry {
+  padding: clamp(1.25rem, 3vw, 2.1rem);
+  background: var(--sheet-sunk);
+  display: flex;
+  flex-direction: column;
+}
+
+.entryHead {
+  font-family: var(--font-archivo-narrow), var(--font-archivo), sans-serif;
+  color: var(--rule);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.entryField {
+  margin-top: 0.75rem;
+  flex: 1;
+  min-height: 8rem;
+  width: 100%;
+  padding: 0.85rem 0.95rem;
+  background: var(--sheet);
+  border: 1px solid var(--rule-soft);
+  color: var(--ink);
+  font-family: var(--font-tinos), "Times New Roman", serif;
+  font-size: 1rem;
+  line-height: 1.45;
+  resize: vertical;
+}
+
+.entryField::placeholder {
+  color: var(--ink-3);
+}
+
+.entryField:hover {
+  border-color: var(--rule);
+}
+
+.entryDrop {
+  border-color: var(--due);
+  background: var(--due-soft);
+}
+
+.entryActions {
+  margin-top: 0.9rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.submit {
+  font-family: var(--font-archivo-narrow), var(--font-archivo), sans-serif;
+  padding: 0.7rem 1.15rem;
+  background: var(--rule);
+  color: var(--sheet);
+  border: 1px solid var(--rule);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 180ms var(--ease-out);
+}
+
+.submit:hover:not(:disabled) {
+  background: #0a4634;
+}
+
+.submit:disabled {
+  background: transparent;
+  color: var(--ink-3);
+  border-color: var(--rule-soft);
+  cursor: not-allowed;
+}
+
+.fileLabel {
+  color: var(--rule);
+  font-size: 0.78rem;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}
+
+.fileInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.entryNote {
+  margin-top: 0.9rem;
+  color: var(--ink-3);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.entryError {
+  margin-top: 0.9rem;
+  padding-left: 0.85rem;
+  border-left: 1px solid var(--due);
+  color: var(--due);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.entryOk {
+  margin-top: 0.9rem;
+  padding-left: 0.85rem;
+  border-left: 1px solid var(--rule);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.entryOkFigure {
+  color: var(--rule);
+  font-weight: 600;
+}
+
+.entryPreview {
+  margin-top: 0.5rem;
+  max-height: 7rem;
+  overflow-y: auto;
+  color: var(--ink-2);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+/* ---------------------------------------------------------------- statement */
+
+.statement {
+  padding: clamp(1.25rem, 3vw, 2.75rem);
+  padding-top: 0.85rem;
+}
+
+.statementHead {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.statementTitle {
+  font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+  max-width: 24ch;
+}
+
+.statementSub {
+  margin-top: 0.9rem;
+  max-width: 62ch;
+  color: var(--ink-2);
+  font-size: 0.95rem;
+}
+
+.summary {
+  padding: 0.8rem 1rem;
+  background: var(--sheet-sunk);
+  border-left: 1px solid var(--rule);
+  max-width: 72ch;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.summaryHead {
+  font-family: var(--font-archivo-narrow), var(--font-archivo), sans-serif;
+  display: block;
+  margin-bottom: 0.4rem;
+  color: var(--rule);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.columns {
+  font-family: var(--font-archivo-narrow), var(--font-archivo), sans-serif;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr) 8.5rem;
+  gap: 1.75rem;
+  margin-top: 1rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--rule);
+  color: var(--rule);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.columnTier {
+  text-align: right;
+}
+
+.entries {
+  list-style: none;
+}
+
+.row {
+  border-bottom: 1px solid var(--rule-hair);
+}
+
+.rowButton {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr) 8.5rem;
+  gap: 1.75rem;
+  width: 100%;
+  align-items: start;
+  padding: 1.15rem 0;
+  background: none;
+  border: 0;
+  text-align: left;
+  cursor: pointer;
+  transition: background 160ms var(--ease-out);
+}
+
+.rowButton:hover {
+  background: var(--sheet-sunk);
+}
+
+.clause {
+  display: block;
+  font-size: 1.08rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.consequence {
+  display: block;
+  margin-top: 0.35rem;
+  max-width: 58ch;
+  color: var(--ink-2);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.tier {
+  font-family: var(--font-archivo-narrow), var(--font-archivo), sans-serif;
+  justify-self: end;
+  align-self: start;
+  padding-bottom: 0.3rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Tier never relies on colour: each carries its word and its own rule. */
+.tierCritical {
+  color: var(--due);
+  border-bottom: 3px double var(--due);
+}
+
+.tierSerious {
+  color: var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.tierWorth {
+  color: var(--carbon);
+  border-bottom: 1px dotted var(--carbon);
+}
+
+/* The reference column. Closed it sits off the line, dimmed; selecting the
+   entry locks it into alignment, which is the found-it state. */
+.reference {
+  display: block;
+  color: var(--ink-3);
+  font-size: 0.98rem;
+  line-height: 1.5;
+  transform: translateX(14px);
+  transition:
+    transform 420ms var(--ease-out),
+    color 420ms var(--ease-out);
+}
+
+.referenceOpen {
+  color: var(--ink);
+  transform: none;
+}
+
+.referenceMark {
+  font-family: var(--font-archivo-narrow), var(--font-archivo), sans-serif;
+  display: none;
+  margin-bottom: 0.35rem;
+  color: var(--ink-3);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.referenceOpen .referenceMark {
+  color: var(--rule);
+}
+
+.quote {
+  box-decoration-break: clone;
+  border-bottom: 1px solid transparent;
+  transition: border-color 360ms var(--ease-out);
+}
+
+.referenceOpen .quote {
+  border-bottom-color: var(--due);
+}
+
+.counter {
+  margin: 0 0 0.95rem;
+  padding: 0.8rem 1rem;
+  background: var(--sheet-sunk);
+  border-left: 1px solid var(--carbon);
+  max-width: 74ch;
+}
+
+.counterHead {
+  font-family: var(--font-archivo-narrow), var(--font-archivo), sans-serif;
+  display: block;
+  margin-bottom: 0.45rem;
+  color: var(--carbon);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.counterBody {
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+.noCounter {
+  margin: 0 0 1.3rem;
+  max-width: 62ch;
+  color: var(--ink-3);
+  font-size: 0.95rem;
+}
+
+.foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 2rem;
+  margin-top: 1.1rem;
+  padding-top: 0.85rem;
+  border-top: 3px double var(--rule);
+  color: var(--ink-2);
+  font-family: var(--font-archivo-narrow), var(--font-archivo), sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.footFigure {
+  color: var(--rule);
+  font-weight: 600;
+}
+
+/* ---------------------------------------------------------------- notes */
+
+.notes {
+  padding: clamp(1.25rem, 3vw, 2.75rem);
+  border-top: 3px double var(--rule);
+  background: var(--sheet-sunk);
+}
+
+.notesTitle {
+  font-size: clamp(1.25rem, 2vw, 1.55rem);
+  max-width: 26ch;
+}
+
+.notesList {
+  margin-top: 1.4rem;
+  display: grid;
+  gap: 1rem;
+  max-width: 72ch;
+  list-style: none;
+}
+
+.notesItem {
+  padding-left: 1rem;
+  border-left: 1px solid var(--rule-soft);
+  color: var(--ink-2);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+/* ---------------------------------------------------------------- close */
+
+.close {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: clamp(1.25rem, 3vw, 2.75rem);
+  border-top: 1px solid var(--rule);
+}
+
+.closeText {
+  max-width: 44ch;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.closeLink {
+  font-family: var(--font-archivo-narrow), var(--font-archivo), sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ---------------------------------------------------------------- responsive */
+
+@media (max-width: 62rem) {
+  .head {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .headLeft {
+    border-right: 0;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+
+  .statementHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 40rem) {
+  .rowButton {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.6rem;
+  }
+
+  /* Stacked, every line names its own fields, so the head is noise. */
+  .columns {
+    display: none;
+  }
+
+  /* The tier grades the clause, so it stays with it rather than after the quote. */
+  .rowClause {
+    order: 0;
+  }
+
+  .tier {
+    order: 1;
+  }
+
+  .reference {
+    order: 2;
+    transform: none;
+    padding-left: 1rem;
+    border-left: 1px solid var(--rule-hair);
+  }
+
+  /* The column head is gone at this width, so each line names its own. */
+  .referenceMark {
+    display: block;
+  }
+
+  .referenceOpen {
+    border-left-color: var(--due);
+  }
+
+  .columnTier {
+    display: none;
+  }
+
+  .tier {
+    justify-self: start;
+  }
+
+}

@@ -173,3 +173,9 @@ scratchpad/
 # ---------------------------------------------------------------
 .agents/
 skills-lock.json
+
+# ---------------------------------------------------------------
+# Design review captures. Screenshots of unreleased UI, and stale the
+# moment the page changes. Kept local.
+# ---------------------------------------------------------------
+.impeccable/review/

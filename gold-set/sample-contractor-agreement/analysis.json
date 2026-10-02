@@ -1,0 +1,52 @@
+{
+  "summary": "You agree to deliver brand identity and web design work for a fixed $6,000 fee, payable within 60 days of invoice. The Client owns everything you produce from the moment you create it, whether or not they have paid. You take on unlimited responsibility for any claim connected to the work, and you agree not to design for competing businesses for a year after the engagement ends. The Client can end the agreement at any time and owes only for work already accepted; the agreement otherwise renews yearly unless cancelled 90 days ahead.",
+  "flags": [
+    {
+      "clauseType": "ip-before-payment",
+      "sourceSentence": "All Work Product, including drafts, concepts, and source files, shall be the sole and exclusive property of the Client upon creation, regardless of whether payment has been made.",
+      "consequence": "The Client owns your work the moment you make it, including drafts. If they do not pay, they still own it and you have no leverage to withhold delivery.",
+      "confidence": "high",
+      "counterOffer": "Ownership of the Work Product shall transfer to the Client upon receipt of full payment of all fees due under this Agreement. Until such payment, the Contractor retains all rights in the Work Product."
+    },
+    {
+      "clauseType": "uncapped-indemnity",
+      "sourceSentence": "The Contractor shall indemnify, defend, and hold harmless the Client and its officers, directors, and employees from and against any and all claims, losses, damages, liabilities, and expenses, including reasonable attorneys’ fees, arising out of or related to the Services.",
+      "consequence": "You are responsible for any claim connected to the work, with no upper limit and no requirement that you caused it. Your exposure is not tied to the $6,000 fee.",
+      "confidence": "high",
+      "counterOffer": "The Contractor’s total liability under this Agreement, including any indemnification obligation, shall not exceed the fees paid to the Contractor hereunder, and shall apply only to claims arising from the Contractor’s breach or negligence."
+    },
+    {
+      "clauseType": "non-compete",
+      "sourceSentence": "During the term of this Agreement and for a period of twelve (12) months thereafter, the Contractor shall not provide design services to any business that competes with the Client.",
+      "consequence": "For a year after this job ends you cannot take design work from any business the Client considers a competitor. The agreement does not define who competes with the Client.",
+      "confidence": "high",
+      "counterOffer": "The Contractor shall not, during the term of this Agreement, use the Client’s confidential information in providing services to any other party. No restriction on the Contractor’s other engagements shall survive termination."
+    },
+    {
+      "clauseType": "slow-payment-no-late-fee",
+      "sourceSentence": "Invoices are payable within sixty (60) days of receipt.",
+      "consequence": "You wait up to two months for each payment, and the agreement sets no penalty if the Client pays late.",
+      "confidence": "high",
+      "counterOffer": "Invoices are payable within thirty (30) days of receipt. Amounts not paid when due shall accrue interest at 1.5% per month."
+    },
+    {
+      "clauseType": "unilateral-termination",
+      "sourceSentence": "The Client may terminate this Agreement at any time, for any reason or no reason, upon written notice, and shall have no further obligation to the Contractor other than payment for Services accepted prior to the date of termination.",
+      "consequence": "The Client can end the engagement at any moment and pay only for work they have already accepted. Time you have scheduled or work in progress is unpaid.",
+      "confidence": "high",
+      "counterOffer": "Either party may terminate this Agreement upon fourteen (14) days’ written notice. Upon termination by the Client, the Client shall pay for all Services performed through the termination date, plus a cancellation fee equal to 25% of the remaining fee."
+    },
+    {
+      "clauseType": "auto-renewal",
+      "sourceSentence": "This Agreement shall automatically renew for successive twelve (12) month terms unless either party provides written notice of non-renewal at least ninety (90) days before the end of the then-current term.",
+      "consequence": "The agreement renews for another year unless you give notice three months before it ends. Miss the window and you are bound for another term.",
+      "confidence": "high"
+    },
+    {
+      "clauseType": "arbitration",
+      "sourceSentence": "Any dispute arising out of or relating to this Agreement shall be resolved exclusively by binding arbitration administered by a single arbitrator, and the parties waive any right to bring or participate in a class action.",
+      "consequence": "Any dispute goes to a private arbitrator rather than a court, and you give up the right to join a class action.",
+      "confidence": "high"
+    }
+  ]
+}

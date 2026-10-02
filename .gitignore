@@ -15,6 +15,7 @@ jspm_packages/
 # ---------------------------------------------------------------
 .env
 .env.*
+!.env.example
 .env.local
 .env.development
 .env.development.local
@@ -165,3 +166,10 @@ desktop.ini
 .temp/
 tmp/
 scratchpad/
+
+# ---------------------------------------------------------------
+# Third-party agent skills installed by `npx skills` — not ours to vendor,
+# and the repo is public
+# ---------------------------------------------------------------
+.agents/
+skills-lock.json

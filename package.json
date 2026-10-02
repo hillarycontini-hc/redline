@@ -10,7 +10,9 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "node --test \"src/**/*.test.ts\"",
-    "test:citations": "node --test src/lib/analysis/citation-check.test.ts src/lib/analysis/fixture-citations.test.ts"
+    "test:citations": "node --test src/lib/analysis/citation-check.test.ts src/lib/analysis/fixture-citations.test.ts",
+    "smoke": "node --env-file=.env.local --experimental-strip-types scripts/smoke.ts",
+    "smoke:clean": "node --env-file=.env.local --experimental-strip-types scripts/smoke.ts --clean"
   },
   "dependencies": {
     "next": "16.3.4",

@@ -1,0 +1,314 @@
+/* The account screens: signing in, and the library. Same world as the reading
+   surface — ledger stock, ledger green owning the rules and the column heads,
+   zero radius, structure carried by rules and column alignment.
+   Direction contract: .impeccable/surfaces/src-app-app-layout-tsx.md.
+   Every colour is a token from globals.css. */
+
+/* ---------------------------------------------------------------- account head */
+
+.head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.85fr);
+  border-bottom: 3px double var(--rule);
+}
+
+.headCell {
+  padding: clamp(1.25rem, 3vw, 2.1rem);
+}
+
+.headCell:first-child {
+  border-right: 1px solid var(--rule-soft);
+}
+
+.label {
+  font-family: var(--font-archivo-narrow), var(--font-archivo), sans-serif;
+  display: block;
+  color: var(--rule);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.headName {
+  margin-top: 0.5rem;
+  max-width: 26ch;
+  font-size: clamp(1.55rem, 2.6vw, 2.1rem);
+  overflow-wrap: anywhere;
+}
+
+.headValue {
+  margin-top: 0.5rem;
+  max-width: 34ch;
+  color: var(--ink-2);
+  font-size: 0.95rem;
+  overflow-wrap: anywhere;
+}
+
+/* ---------------------------------------------------------------- the body */
+
+.body {
+  padding: clamp(1.25rem, 3vw, 2.75rem);
+}
+
+.note {
+  margin-top: 0.9rem;
+  max-width: 62ch;
+  color: var(--ink-2);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.quietNote {
+  margin-top: 0.9rem;
+  max-width: 62ch;
+  color: var(--ink-3);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.figure {
+  color: var(--rule);
+  font-weight: 600;
+}
+
+/* A panel recedes by taking the sunk fill and one left rule in the colour of
+   whatever owns it. No top, right or bottom border, and no shadow. */
+.panel {
+  margin-top: 1.4rem;
+  padding: 0.8rem 1rem;
+  max-width: 62ch;
+  background: var(--sheet-sunk);
+  border-left: 1px solid var(--rule);
+}
+
+.panelHead {
+  font-family: var(--font-archivo-narrow), var(--font-archivo), sans-serif;
+  display: block;
+  margin-bottom: 0.4rem;
+  color: var(--rule);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.panelBody {
+  max-width: 54ch;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+/* ---------------------------------------------------------------- the form */
+
+.form {
+  margin-top: 1.4rem;
+  max-width: 28rem;
+}
+
+.formRow {
+  margin-top: 1.15rem;
+}
+
+.formRow:first-child {
+  margin-top: 0;
+}
+
+.field {
+  margin-top: 0.5rem;
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  background: var(--sheet);
+  border: 1px solid var(--rule-soft);
+  color: var(--ink);
+  font-family: var(--font-archivo), system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.field:hover:not(:disabled) {
+  border-color: var(--rule);
+}
+
+.field::placeholder {
+  color: var(--ink-3);
+}
+
+.actions {
+  margin-top: 1.4rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule-hair);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.submit {
+  font-family: var(--font-archivo-narrow), var(--font-archivo), sans-serif;
+  padding: 0.7rem 1.15rem;
+  background: var(--rule);
+  color: var(--sheet);
+  border: 1px solid var(--rule);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 180ms var(--ease-out);
+}
+
+.submit:hover:not(:disabled) {
+  background: var(--rule-deep);
+}
+
+.submit:disabled {
+  background: transparent;
+  color: var(--ink-3);
+  border-color: var(--rule-soft);
+  cursor: not-allowed;
+}
+
+/* The second action in this world is a link, never a second filled button. */
+.secondary {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--rule);
+  font-size: 0.82rem;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}
+
+.secondary:disabled {
+  color: var(--ink-3);
+  cursor: not-allowed;
+}
+
+.problem {
+  margin-top: 1.15rem;
+  padding-left: 0.85rem;
+  max-width: 54ch;
+  border-left: 1px solid var(--due);
+  color: var(--due);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+/* The form having done its job. Green, because nothing has gone wrong. */
+.notice {
+  margin-top: 1.15rem;
+  padding-left: 0.85rem;
+  max-width: 54ch;
+  border-left: 1px solid var(--rule);
+  color: var(--ink);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+/* ---------------------------------------------------------------- the library */
+
+/* One grid definition, used by the column head row and by every line. A column
+   cannot be added to one without the other. */
+.ledgerHead,
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 11rem;
+  gap: 1.75rem;
+  align-items: baseline;
+}
+
+.ledgerHead {
+  margin-top: 1.4rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+/* The right-hand column reads as a field down the page, starting at its head. */
+.ledgerHead > :last-child,
+.row > :last-child {
+  margin-right: calc(clamp(1.25rem, 3vw, 2.75rem) * -1);
+  padding-right: clamp(1.25rem, 3vw, 2.75rem);
+  background: var(--field-head);
+}
+
+.rows {
+  list-style: none;
+}
+
+.row {
+  padding: 1.15rem 0;
+  border-bottom: 1px solid var(--rule-hair);
+}
+
+.rowName {
+  font-size: 1.08rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+
+.rowDate {
+  font-family: var(--font-archivo-narrow), var(--font-archivo), sans-serif;
+  color: var(--ink-2);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* An empty library is a state, not an absence. It gets a sentence, opened by
+   the same rule a statement body is opened by. */
+.empty {
+  margin-top: 1.4rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--rule);
+  max-width: 54ch;
+  color: var(--ink-2);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.foot {
+  margin-top: 1.4rem;
+  padding-top: 0.85rem;
+  border-top: 3px double var(--rule);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.75rem;
+  color: var(--ink-2);
+  font-size: 0.78rem;
+}
+
+/* ---------------------------------------------------------------- responsive */
+
+@media (max-width: 62rem) {
+  .head {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .headCell:first-child {
+    border-right: 0;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+}
+
+@media (max-width: 40rem) {
+  /* The stack names itself: each line carries its own date, so the column head
+     row goes rather than hanging above content it no longer describes. */
+  .ledgerHead {
+    display: none;
+  }
+
+  .row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.35rem;
+  }
+
+  .row > :last-child {
+    margin-right: 0;
+    padding-right: 0;
+    background: none;
+  }
+}

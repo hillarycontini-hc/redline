@@ -360,3 +360,61 @@ Ten real agreements or leases, stripped of anything identifying a real party, wi
 clauses identified before Redline reads them. `gold-set/README.md` documents the layout and the
 manifest. Five fair ones matter just as much: the clean-document gate is the one that catches
 Redline becoming a tool that always finds something.
+
+---
+
+## What Supabase being absent means for tickets 07, 08 and 09
+
+There is no Supabase project, so there was no database to build against at any point in this run.
+Everything below is written, typechecked, and reasoned about, and **none of it has been run against
+a real Postgres.** Treat that as the known risk in this part of the build.
+
+### What I did verify, with the variables absent
+
+- `pnpm build`, `pnpm test` and `pnpm dev` all work. `/`, `/read`, `/sign-in` and `/library` each
+  return 200.
+- **`POST /api/analyze` still returns a full reading** — 8 flags, 0 dropped, 8 of 8 source
+  sentences verbatim in the document. Adding accounts did not touch the path that works without
+  one, which was the thing most likely to break.
+- `/library` and `/sign-in` say, in plain words, that this copy has no accounts set up, that
+  nothing has gone wrong at the reader's end, and that reading a document still works. A quiet last
+  line names the two unset variables for whoever runs the site.
+- `pnpm verify:rls` refuses to run and exits non-zero when the variables are missing, rather than
+  passing vacuously.
+
+### What I verified by pointing it at a fake project
+
+With both variables set to values that are syntactically valid and resolve to nothing, a
+signed-out request for `/library` returned **`307 → /sign-in?next=%2Flibrary`**. The guard is
+server-side; it does not rely on hiding a link.
+
+### What nobody can verify until you run the migrations
+
+**Ticket 07, criterion 1** — sign up, sign out, sign back in, session survives a reload. The wiring
+is `@supabase/ssr` with cookies plus `src/proxy.ts` for refresh, which is the supported shape for
+Next 16. No account was ever created, so the demo is not claimed.
+
+**Ticket 07, criterion 5** — a read for another user's row returns nothing, *verified against the
+running database*. The criterion says explicitly that a test double does not count, and it is
+right. I did not write one and call it verification.
+
+**`pnpm verify:rls` is there to settle it in one command.** It signs in as two test accounts over
+the anon key, has each write a row to all three tables, then has each ask for the other's rows,
+and fails loudly if anything comes back. It never touches the service-role key, which would bypass
+the very thing it is checking.
+
+### The order to run things
+
+```
+1. Create the Supabase project.
+2. Put NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in .env.local.
+3. Run supabase/migrations/0001 … 0004 in order. See supabase/migrations/README.md.
+4. Create the two test accounts that README names.
+5. corepack pnpm verify:rls      <- this is the one that proves the isolation
+```
+
+### One question the schema cannot answer for itself
+
+**Is email confirmation on for the project?** If it is, sign-up ends on "open the link we emailed
+you" rather than landing in the library, and ticket 07's demo reads differently. The code handles
+both; which one a reader meets is a project setting, and it is yours.

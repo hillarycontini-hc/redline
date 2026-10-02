@@ -13,9 +13,12 @@
     "test:citations": "node --test src/lib/analysis/citation-check.test.ts src/lib/analysis/fixture-citations.test.ts",
     "smoke": "node --env-file=.env.local --experimental-strip-types scripts/smoke.ts",
     "smoke:clean": "node --env-file=.env.local --experimental-strip-types scripts/smoke.ts --clean",
-    "gates": "node --env-file-if-exists=.env.local --experimental-strip-types scripts/gates.ts"
+    "gates": "node --env-file-if-exists=.env.local --experimental-strip-types scripts/gates.ts",
+    "verify:rls": "node --env-file-if-exists=.env.local --experimental-strip-types scripts/verify-rls.ts"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.117.2",
     "mammoth": "^1.13.0",
     "next": "16.3.4",
     "pdfjs-dist": "^6.3.289",

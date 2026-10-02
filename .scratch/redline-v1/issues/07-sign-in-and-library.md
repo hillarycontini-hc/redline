@@ -12,13 +12,13 @@ in, reload, and still be signed in.
 
 **Blocked by:** None — can start immediately, alongside 02.
 
-**Status:** ready-for-agent
+**Status:** built; two criteria cannot be demonstrated without a running Supabase project (see BUILD-REPORT.md)
 
 - [ ] A person can sign up, sign out, and sign back in, and the session survives a page
       reload.
-- [ ] A signed-in person with nothing saved sees a library that states it is empty.
-- [ ] A signed-out visitor cannot reach the library.
-- [ ] Tables exist for documents, analyses, and red lines, each with row-level security
+- [x] A signed-in person with nothing saved sees a library that states it is empty.
+- [x] A signed-out visitor cannot reach the library.
+- [x] Tables exist for documents, analyses, and red lines, each with row-level security
       keyed to the authenticated user.
 - [ ] A read issued for another user's row returns nothing, verified against the running
       database rather than asserted against a test double.

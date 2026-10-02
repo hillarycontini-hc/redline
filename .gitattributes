@@ -9,3 +9,11 @@ tests/fixtures/*.txt   text eol=lf
 tests/fixtures/*.json  text eol=lf
 gold-set/**/*.txt      text eol=lf
 gold-set/**/*.json     text eol=lf
+
+# Binary test fixtures. A PDF's cross-reference table is a list of byte offsets
+# into the file, so a single line-ending conversion shifts every offset after it
+# and the document stops opening. Git's text=auto heuristic reads a hand-built
+# PDF as text, because it is mostly ASCII and carries no NUL byte, and converts
+# it. Say binary explicitly rather than relying on the guess.
+*.pdf   binary
+*.docx  binary

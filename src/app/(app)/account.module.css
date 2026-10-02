@@ -242,11 +242,99 @@
   border-bottom: 1px solid var(--rule-hair);
 }
 
+/* The first column holds the document's name and what can be done to it. The
+   grid keeps its two columns: the action lives inside the name's cell rather
+   than taking a third, because a column head reading "action" would be a head
+   over nothing. */
+.rowMain {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 0.9rem;
+  min-width: 0;
+}
+
 .rowName {
   font-size: 1.08rem;
   font-weight: 600;
   letter-spacing: -0.01em;
   overflow-wrap: anywhere;
+}
+
+/* The second action in this world is a link, never a second filled button. */
+.rowAction {
+  font-family: var(--font-archivo-narrow), var(--font-archivo), sans-serif;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--rule);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-underline-offset: 0.22em;
+  cursor: pointer;
+}
+
+.rowProblem {
+  flex-basis: 100%;
+  max-width: 54ch;
+  padding-left: 0.85rem;
+  border-left: 1px solid var(--due);
+  color: var(--due);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* The asking, on the row itself, so the document being removed is still in
+   front of the reader while they answer. */
+.confirm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 0.9rem;
+  flex-basis: 100%;
+  padding-left: 0.85rem;
+  border-left: 1px solid var(--due);
+}
+
+.confirmAsk {
+  max-width: 54ch;
+  color: var(--ink);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.confirmActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.9rem;
+}
+
+/* The one place red sits on text that is not a tier word: this is what the
+   clause costs, spent on what the press costs. Underlined, not filled — a
+   second filled button would read as the equal of the primary action. */
+.confirmYes {
+  font-family: var(--font-archivo-narrow), var(--font-archivo), sans-serif;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--due);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-underline-offset: 0.22em;
+  cursor: pointer;
+}
+
+.confirmYes:disabled {
+  color: var(--ink-3);
+  cursor: not-allowed;
 }
 
 .rowDate {

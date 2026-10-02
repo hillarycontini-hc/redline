@@ -1,12 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { READ_PATH, gateLibrary } from "@/lib/supabase/access.ts";
+import {
+  READ_PATH,
+  gateLibrary,
+  savedReadingPath,
+} from "@/lib/supabase/access.ts";
 import { listSavedDocuments } from "@/lib/supabase/library.ts";
 import type { SavedDocument } from "@/lib/supabase/library.ts";
 import { readSession } from "@/lib/supabase/server.ts";
 import styles from "../account.module.css";
 import { NoAccounts } from "../no-accounts.tsx";
+import { RemoveDocument } from "./remove-document.tsx";
 
 export const metadata: Metadata = {
   title: "Redline — your library",
@@ -79,7 +84,18 @@ export default async function LibraryPage() {
             <ul className={styles.rows}>
               {saved.documents.map((document) => (
                 <li className={styles.row} key={document.id}>
-                  <span className={styles.rowName}>{document.filename}</span>
+                  <div className={styles.rowMain}>
+                    <Link
+                      className={styles.rowName}
+                      href={savedReadingPath(document.id)}
+                    >
+                      {document.filename}
+                    </Link>
+                    <RemoveDocument
+                      documentId={document.id}
+                      filename={document.filename}
+                    />
+                  </div>
                   <span className={styles.rowDate}>{dateRead(document)}</span>
                 </li>
               ))}

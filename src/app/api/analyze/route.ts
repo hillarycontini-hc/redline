@@ -1,11 +1,14 @@
 import { analyze } from "@/lib/analysis/analyze.ts";
 import { SEED_RED_LINES } from "@/lib/analysis/red-lines.ts";
-import type { AnalyzeResponse } from "@/lib/analysis/types.ts";
+import type { Analysis, AnalyzeResponse, SavedTo } from "@/lib/analysis/types.ts";
 import {
   ConfigError,
   UpstreamBusyError,
   openRouterCaller,
 } from "@/lib/openrouter.ts";
+import { gateKeeping } from "@/lib/supabase/access.ts";
+import { saveReading } from "@/lib/supabase/saved-reading.ts";
+import { readSession } from "@/lib/supabase/server.ts";
 import { MALFORMED_JSON, checkRequest, isJsonRequest } from "./validate.ts";
 
 /**
@@ -16,6 +19,12 @@ import { MALFORMED_JSON, checkRequest, isJsonRequest } from "./validate.ts";
  * the file is parsed in the reader's own browser and only the text it confirms
  * travels (CLAUDE.md). A request arriving as any other content type is refused
  * before the body is touched.
+ *
+ * This is also where a reading is kept, when there is an account to keep it in.
+ * It is kept here rather than by a later call from the browser because this is
+ * the only place that knows which red lines the reading actually ran against.
+ * A list sent back up afterwards would be hearsay, and the red lines in force
+ * are the one part of a saved reading that cannot be reconstructed later.
  *
  * Phase 1 reads against the seeded red lines. Ticket 09 makes the list the
  * reader's own.
@@ -101,7 +110,55 @@ export async function POST(request: Request): Promise<Response> {
     summary: analysis.summary,
     flags: analysis.flags,
     droppedCount: analysis.dropped.length,
+    saved: await keep(checked.filename, checked.documentText, analysis),
   };
 
   return Response.json(payload);
+}
+
+/**
+ * Keep the reading, if there is somewhere to keep it.
+ *
+ * Nothing in here can stop the reader getting their reading. A reader with no
+ * account, a reader who is not signed in, and a reader whose library would not
+ * take the row all get the same statement on screen; what differs is one quiet
+ * line underneath it. So every failure comes back as a value, is logged with
+ * whatever the database said, and the reading goes out regardless.
+ */
+async function keep(
+  filename: string,
+  documentText: string,
+  analysis: Analysis,
+): Promise<SavedTo> {
+  const { viewer, access } = await readSession();
+  const gate = gateKeeping(viewer);
+  if (!gate.keep) return { kept: false, why: gate.why };
+
+  const saved = await saveReading(access, gate.userId, {
+    filename,
+    documentText,
+    summary: analysis.summary,
+    // The list this reading actually ran against, copied in as data. Editing
+    // the live list afterwards leaves this one alone, which is the whole reason
+    // a reading is stored rather than read again.
+    redLinesInForce: SEED_RED_LINES,
+    flags: analysis.flags,
+  });
+
+  if (saved.kept) return saved;
+
+  if (saved.why === "would-not-hold") {
+    // ADR 0001 at the storage boundary: a flag whose range does not fit its
+    // sentence is not written. If this ever fires it is a bug in the analysis,
+    // not a database problem, so it is logged as loudly as a dropped flag.
+    console.error(
+      "[analyze] the reading would not hold on the way into the library, so nothing was kept",
+    );
+  } else {
+    console.error(
+      `[analyze] the reading did not reach the library: ${saved.detail ?? saved.why}`,
+    );
+  }
+
+  return { kept: false, why: "would-not-keep" };
 }

@@ -11,7 +11,12 @@
  */
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { MAX_DOCUMENT_CHARS, checkRequest } from "./validate.ts";
+import {
+  MAX_DOCUMENT_CHARS,
+  MAX_FILENAME_CHARS,
+  PASTED_DOCUMENT,
+  checkRequest,
+} from "./validate.ts";
 
 const JSON_TYPE = "application/json";
 const DOC = "The Client may terminate this Agreement at any time.";
@@ -68,6 +73,62 @@ test("a valid body passes and carries the document text through unchanged", () =
   assert.equal(checked.documentText, DOC);
 });
 
+test("the document's name comes through, so a kept reading can be found under it", () => {
+  const checked = checkRequest(JSON_TYPE, {
+    documentText: DOC,
+    filename: "Acme — services agreement v3.pdf",
+  });
+  assert.equal(checked.ok, true);
+  if (!checked.ok) throw new Error("unreachable");
+  assert.equal(checked.filename, "Acme — services agreement v3.pdf");
+});
+
+test("a document with no name of its own is called pasted text", () => {
+  for (const value of [undefined, null, "", "   ", "\n\t"]) {
+    const checked = checkRequest(JSON_TYPE, {
+      documentText: DOC,
+      filename: value,
+    });
+    assert.equal(checked.ok, true, `${JSON.stringify(value)} was refused`);
+    if (!checked.ok) throw new Error("unreachable");
+    assert.equal(checked.filename, PASTED_DOCUMENT);
+  }
+
+  const absent = checkRequest(JSON_TYPE, { documentText: DOC });
+  assert.equal(absent.ok, true);
+  if (!absent.ok) throw new Error("unreachable");
+  assert.equal(absent.filename, PASTED_DOCUMENT);
+});
+
+test("a name carrying line breaks or control characters arrives as one plain line", () => {
+  const checked = checkRequest(JSON_TYPE, {
+    documentText: DOC,
+    filename: "  lease\u0000 \n  draft\t2.docx  ",
+  });
+  assert.equal(checked.ok, true);
+  if (!checked.ok) throw new Error("unreachable");
+  assert.equal(checked.filename, "lease draft 2.docx");
+});
+
+test("a name that is not text is refused with 400", () => {
+  for (const value of [42, true, ["a.pdf"], { name: "a.pdf" }]) {
+    const r = refusal(JSON_TYPE, { documentText: DOC, filename: value });
+    assert.equal(r.status, 400, `${JSON.stringify(value)} was not refused`);
+  }
+});
+
+test("a name past the stated limit is refused with 400, and the limit is in the message", () => {
+  const r = refusal(JSON_TYPE, {
+    documentText: DOC,
+    filename: "x".repeat(MAX_FILENAME_CHARS + 1),
+  });
+  assert.equal(r.status, 400);
+  assert.ok(
+    r.message.includes(MAX_FILENAME_CHARS.toLocaleString("en-GB")),
+    `the refusal does not state the limit: ${r.message}`,
+  );
+});
+
 test("a missing documentText is refused with 400", () => {
   const r = refusal(JSON_TYPE, {});
   assert.equal(r.status, 400);
@@ -113,11 +174,16 @@ test("a body that is not an object is refused with 400", () => {
   }
 });
 
-test("a body carrying anything besides documentText is refused with 400", () => {
-  const r = refusal(JSON_TYPE, {
-    documentText: DOC,
-    fileName: "contract.pdf",
-  });
-  assert.equal(r.status, 400);
-  assert.match(r.message, /fileName/);
+test("a body carrying anything besides the document's text and name is refused with 400", () => {
+  // The route takes two fields. Everything else is turned away by name,
+  // including an owner id — who the reading belongs to is settled by the session
+  // on the server and is never something a request gets to say.
+  for (const field of ["ownerId", "redLines", "fileName", "file"]) {
+    const r = refusal(JSON_TYPE, { documentText: DOC, [field]: "anything" });
+    assert.equal(r.status, 400, `${field} was not refused`);
+    assert.ok(
+      r.message.includes(field),
+      `the refusal does not name ${field}: ${r.message}`,
+    );
+  }
 });

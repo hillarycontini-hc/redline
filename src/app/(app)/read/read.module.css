@@ -478,6 +478,89 @@
   text-transform: uppercase;
 }
 
+/* ------------------------------------------------------------ the notes band
+
+   The red lines a saved reading ran against, across the sheet's full width,
+   opened by the double rule that closes an account section. */
+
+.notes {
+  padding: clamp(1.25rem, 3vw, 2.75rem);
+  background: var(--sheet-sunk);
+  border-top: 3px double var(--rule);
+}
+
+.notesHead {
+  font-family: var(--font-archivo-narrow), var(--font-archivo), sans-serif;
+  display: block;
+  color: var(--rule);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.notesNote {
+  margin-top: 0.5rem;
+  max-width: 62ch;
+  color: var(--ink-2);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.redLines {
+  margin-top: 1rem;
+  padding-top: 0.45rem;
+  border-top: 1px solid var(--rule);
+  list-style: none;
+  max-width: 54rem;
+}
+
+/* The same two-column arrangement the statement uses: what it is on the left,
+   what tier it carries right-aligned in the amount column. */
+.redLine {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 8.5rem;
+  gap: 1.75rem;
+  align-items: baseline;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--rule-hair);
+}
+
+.redLineLabel {
+  font-size: 0.95rem;
+  overflow-wrap: anywhere;
+}
+
+.redLine .tier {
+  justify-self: end;
+  text-align: right;
+}
+
+@media (max-width: 40rem) {
+  .redLine {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.35rem;
+  }
+
+  .redLine .tier {
+    justify-self: start;
+    text-align: left;
+  }
+}
+
+/* Whether the reading was kept. A note in the statement's own voice, set at
+   note size behind a soft rule, so it sits under the statement rather than
+   competing with a line on it. */
+.keptNote {
+  margin-top: 0.9rem;
+  padding-left: 0.85rem;
+  border-left: 1px solid var(--rule-soft);
+  max-width: 54ch;
+  color: var(--ink-3);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
 /* ---------------------------------------------------------------- responsive */
 
 @media (max-width: 62rem) {

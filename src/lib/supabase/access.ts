@@ -22,6 +22,15 @@ export type LibraryGate =
   | { show: "no-accounts"; missing: readonly string[] }
   | { show: "sign-in-first"; goTo: string };
 
+export type KeepingGate =
+  | { keep: true; userId: string }
+  | { keep: false; why: "no-account" | "not-signed-in" };
+
+/** One saved reading, by the id of the document it is of. */
+export function savedReadingPath(documentId: string): string {
+  return `${LIBRARY_PATH}/${encodeURIComponent(documentId)}`;
+}
+
 /**
  * Whether this request gets the library.
  *
@@ -37,6 +46,23 @@ export function gateLibrary(viewer: Viewer): LibraryGate {
     return { show: "sign-in-first", goTo: signInPathFor(LIBRARY_PATH) };
   }
   return { show: "library", userId: viewer.userId };
+}
+
+/**
+ * Whether this reading is kept, and under which account.
+ *
+ * Only a signed-in reader's reading is. The other two viewers are told apart
+ * because the reader is owed different words for each: one of them can sign in
+ * and have the next one kept, and the other is looking at a copy of Redline
+ * with nowhere to keep anything. Neither is interrupted — the reading they came
+ * for runs either way.
+ */
+export function gateKeeping(viewer: Viewer): KeepingGate {
+  if (viewer.state === "no-accounts") return { keep: false, why: "no-account" };
+  if (viewer.state === "signed-out") {
+    return { keep: false, why: "not-signed-in" };
+  }
+  return { keep: true, userId: viewer.userId };
 }
 
 /** Sign in, and come back to where you were going. */

@@ -61,6 +61,15 @@ export interface Analysis {
 }
 
 /**
+ * Whether the reading was kept in the reader's library, and why not when it was
+ * not. Three reasons, because the reader is owed different words for each and
+ * one of them is not their doing. Nothing here interrupts the reading.
+ */
+export type SavedTo =
+  | { kept: true; documentId: string }
+  | { kept: false; why: "no-account" | "not-signed-in" | "would-not-keep" };
+
+/**
  * What POST /api/analyze sends back. Dropped flags are counted so the reader
  * is told how many were refused, but their sentences are never sent: an
  * unlocatable sentence is the one thing the reader must not be shown.
@@ -69,6 +78,7 @@ export interface AnalyzeResponse {
   summary: string;
   flags: Flag[];
   droppedCount: number;
+  saved: SavedTo;
 }
 
 /** What the model is asked to return. Validated before it becomes a Flag. */

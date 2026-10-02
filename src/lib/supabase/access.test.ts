@@ -17,8 +17,10 @@ import {
   LIBRARY_PATH,
   READ_PATH,
   SIGN_IN_PATH,
+  gateKeeping,
   gateLibrary,
   onwardPath,
+  savedReadingPath,
   signInPathFor,
 } from "./access.ts";
 import type { Viewer } from "./access.ts";
@@ -109,4 +111,51 @@ test("the sign-in link the guard builds carries a sanitised destination", () => 
   const path = signInPathFor("//evil.example");
   const next = new URLSearchParams(path.split("?")[1]).get("next");
   assert.equal(next, READ_PATH);
+});
+
+test("a signed-in reader's reading is kept, under their own account", () => {
+  const gate = gateKeeping({
+    state: "signed-in",
+    userId: "a2c1f0de-0000-4000-8000-000000000001",
+    email: "freelancer@example.com",
+  });
+
+  assert.equal(gate.keep, true);
+  if (!gate.keep) throw new Error("unreachable");
+  assert.equal(gate.userId, "a2c1f0de-0000-4000-8000-000000000001");
+});
+
+test("nothing is kept for a reader with no account, and the two reasons are told apart", () => {
+  const signedOut = gateKeeping({ state: "signed-out" });
+  assert.equal(signedOut.keep, false);
+  if (signedOut.keep) throw new Error("unreachable");
+  assert.equal(signedOut.why, "not-signed-in");
+
+  const noAccounts = gateKeeping({ state: "no-accounts", missing: [] });
+  assert.equal(noAccounts.keep, false);
+  if (noAccounts.keep) throw new Error("unreachable");
+  assert.equal(noAccounts.why, "no-account");
+});
+
+test("a saved reading's address is the library's, and it carries no stray characters", () => {
+  assert.equal(
+    savedReadingPath("0f6e2d10-0000-4000-8000-000000000001"),
+    `${LIBRARY_PATH}/0f6e2d10-0000-4000-8000-000000000001`,
+  );
+
+  // Whatever arrives, the address stays one path on this site.
+  for (const hostile of ["../evil", "a/b", "?x=1", "#top", " "]) {
+    const path = savedReadingPath(hostile);
+    assert.ok(path.startsWith(`${LIBRARY_PATH}/`));
+    assert.equal(
+      onwardPath(path),
+      path,
+      `${JSON.stringify(hostile)} made an address that would not be followed`,
+    );
+    assert.equal(
+      path.split("/").length,
+      3,
+      `${JSON.stringify(hostile)} escaped its own path segment: ${path}`,
+    );
+  }
 });

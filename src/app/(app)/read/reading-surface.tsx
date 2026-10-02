@@ -1,19 +1,14 @@
 "use client";
 
-import {
-  useEffect,
-  useId,
-  useRef,
-  useState,
-  useSyncExternalStore,
-} from "react";
+import Link from "next/link";
+import { useId, useState, useSyncExternalStore } from "react";
+import { PASTED_DOCUMENT } from "@/app/api/analyze/validate.ts";
 import { MAX_QUESTION_CHARS } from "@/app/api/ask/validate.ts";
 import { SEED_RED_LINES } from "@/lib/analysis/red-lines.ts";
 import type {
   AnalyzeResponse,
   AskResponse,
-  Flag,
-  Severity,
+  SavedTo,
 } from "@/lib/analysis/types.ts";
 import { takeHandoff, type Handoff } from "@/lib/handoff.ts";
 import {
@@ -21,7 +16,15 @@ import {
   checkUsable,
   extractText,
 } from "@/lib/parse/extract.ts";
+import { SIGN_IN_PATH, savedReadingPath } from "@/lib/supabase/access.ts";
 import styles from "./read.module.css";
+import {
+  ANSWER_MARK_FIELD,
+  DocumentBody,
+  StatementBody,
+  markFor,
+  type Mark,
+} from "./statement.tsx";
 
 /**
  * The reader's open account with one document. The document holds the left
@@ -32,46 +35,12 @@ import styles from "./read.module.css";
  * posted onward, as JSON, and the route refuses anything else.
  */
 
-const TIER_WORD: Record<Severity, string> = {
-  Critical: styles.tierCritical,
-  Serious: styles.tierSerious,
-  "Worth knowing": styles.tierWorth,
-};
-
-const QUOTE_RULE: Record<Severity, string> = {
-  Critical: styles.quoteCritical,
-  Serious: styles.quoteSerious,
-  "Worth knowing": styles.quoteWorth,
-};
-
-/** The wash behind the sentence where it sits in the document itself. */
-const MARK_FIELD: Record<Severity, string> = {
-  Critical: styles.markCritical,
-  Serious: styles.markSerious,
-  "Worth knowing": styles.markWorth,
-};
-
-/**
- * A sentence to mark in the document column, and the wash to mark it with. An
- * open entry and a quoted sentence under an answer both arrive as one of
- * these, so the marking runs once and one thing is marked at a time.
- */
-interface Mark {
-  start: number;
-  end: number;
-  field: string;
-}
-
-const LABELS = new Map(SEED_RED_LINES.map((r) => [r.clauseType, r.label]));
-
 interface DocumentText {
   name: string;
   text: string;
 }
 
 type Status = "idle" | "running" | "done" | "failed";
-
-const PASTED = "Pasted text";
 
 const NO_SERVER =
   "Redline could not get through to the server. Check your connection and try it again.";
@@ -117,6 +86,10 @@ export function ReadingSurface() {
   const [failure, setFailure] = useState<string | null>(null);
   const [readAt, setReadAt] = useState<string | null>(null);
 
+  // Whether this reading was kept, and where. Said quietly, under the statement
+  // the reader came for, and never in front of it.
+  const [saved, setSaved] = useState<SavedTo | null>(null);
+
   // Which entry is open. One at a time, the way a reader works down a
   // statement, and the open entry is the one marked in the document column.
   const [openEntry, setOpenEntry] = useState<number | null>(null);
@@ -141,6 +114,7 @@ export function ReadingSurface() {
     setResult(null);
     setFailure(null);
     setReadAt(null);
+    setSaved(null);
     setOpenEntry(null);
     // The answer belonged to the document that is going away with it.
     clearQuery();
@@ -199,7 +173,13 @@ export function ReadingSurface() {
       response = await fetch("/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ documentText: confirmed.text }),
+        // The name goes with the text so a reading kept in the library can be
+        // found again under the name the reader knows it by. The file itself
+        // stays in this browser, as it always has.
+        body: JSON.stringify({
+          documentText: confirmed.text,
+          filename: confirmed.name,
+        }),
       });
     } catch {
       setStatus("failed");
@@ -218,6 +198,7 @@ export function ReadingSurface() {
 
     const payload = (await response.json()) as AnalyzeResponse;
     setResult(payload);
+    setSaved(payload.saved);
     // The first line opens itself, so the marked sentence and the wording to
     // send back are both on screen without a click.
     openEntryAt(payload.flags.length > 0 ? 0 : null);
@@ -290,9 +271,9 @@ export function ReadingSurface() {
       : null;
 
   const marked: Mark | null = openFlag
-    ? { ...openFlag.location, field: MARK_FIELD[openFlag.severity] }
+    ? markFor(openFlag)
     : openQuote
-      ? { ...openQuote.location, field: styles.markAnswer }
+      ? { ...openQuote.location, field: ANSWER_MARK_FIELD }
       : null;
 
   return (
@@ -382,7 +363,7 @@ export function ReadingSurface() {
                   type="button"
                   className={styles.submit}
                   disabled={draft.trim().length === 0 || parsing}
-                  onClick={() => confirm(PASTED, draft)}
+                  onClick={() => confirm(PASTED_DOCUMENT, draft)}
                 >
                   {parsing ? "Reading the file" : "Show the text"}
                 </button>
@@ -427,6 +408,9 @@ export function ReadingSurface() {
             onOpen={openEntryAt}
           />
 
+          {/* Said after the statement is on screen, never before it. */}
+          {status === "done" && saved && <KeptNote saved={saved} />}
+
           {/* The query line, at the foot of the statement. It is here as soon
               as there is a document to ask about: the reader does not have to
               run the reading first to ask a question of their own. */}
@@ -443,64 +427,6 @@ export function ReadingSurface() {
         </section>
       </div>
     </>
-  );
-}
-
-/**
- * The whole parse, as set type, with the open sentence marked where it sits in
- * the reader's own paragraph — whether it came from an entry on the statement
- * or from an answer's citation.
- *
- * The marked span is sliced out of this text with the character range the
- * citation check worked out when the flag or the citation was made. The model's
- * copy of the sentence is never rendered here and the text is never searched
- * for it: what the reader is looking at is their document.
- */
-function DocumentBody({ text, marked }: { text: string; marked: Mark | null }) {
-  const boxRef = useRef<HTMLDivElement>(null);
-  const markRef = useRef<HTMLElement>(null);
-
-  const start = marked?.start ?? -1;
-  const end = marked?.end ?? -1;
-
-  useEffect(() => {
-    const box = boxRef.current;
-    const mark = markRef.current;
-    if (!box || !mark) return;
-
-    // Scroll the document's own box and nothing else. The reader's place on
-    // the page is theirs to keep.
-    const boxTop = box.getBoundingClientRect().top;
-    const markBox = mark.getBoundingClientRect();
-    const centred =
-      box.scrollTop +
-      (markBox.top - boxTop) -
-      (box.clientHeight - markBox.height) / 2;
-
-    const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    box.scrollTo({
-      top: Math.max(0, centred),
-      behavior: still ? "auto" : "smooth",
-    });
-  }, [start, end, text]);
-
-  return (
-    <div className={`${styles.documentText} docType`} ref={boxRef}>
-      {marked ? (
-        <>
-          {text.slice(0, start)}
-          <mark
-            ref={markRef}
-            className={`${styles.documentMark} ${marked.field}`}
-          >
-            {text.slice(start, end)}
-          </mark>
-          {text.slice(end)}
-        </>
-      ) : (
-        text
-      )}
-    </div>
   );
 }
 
@@ -542,110 +468,56 @@ function Statement({
   }
 
   return (
-    <>
-      <p className={styles.summary}>
-        <span className={styles.summaryHead}>Summary</span>
-        {result.summary}
-      </p>
-
-      {result.flags.length === 0 ? (
-        <p className={styles.quiet}>
-          None of the {SEED_RED_LINES.length} clauses on the list turned up in
-          this document.
-        </p>
-      ) : (
-        <ul className={styles.entries}>
-          {result.flags.map((flag, index) => (
-            <Entry
-              key={`${flag.clauseType}-${index}`}
-              flag={flag}
-              isOpen={index === openEntry}
-              onOpen={() => onOpen(index === openEntry ? null : index)}
-            />
-          ))}
-        </ul>
-      )}
-
-      <p className={styles.foot}>
-        <span>
-          <span className={styles.figure}>{result.flags.length}</span>{" "}
-          {result.flags.length === 1 ? "line" : "lines"} on this statement
-        </span>
-        <span>
-          <span className={styles.figure}>{result.droppedCount}</span> dropped
-          for want of a source sentence
-        </span>
-      </p>
-    </>
+    <StatementBody
+      summary={result.summary}
+      flags={result.flags}
+      droppedCount={result.droppedCount}
+      redLinesCount={SEED_RED_LINES.length}
+      openEntry={openEntry}
+      onOpen={onOpen}
+    />
   );
 }
 
 /**
- * One line item. The whole row is the control, so selecting it needs a mouse
- * no more than it needs a keyboard, and opening it does two things at once:
- * the sentence in the document column is marked, and the wording to send back
- * appears beneath the row.
+ * Whether this reading was kept, said once and quietly, under the statement.
+ *
+ * It is a line of text and not a prompt. A reader who came to find out what
+ * they are signing is not interrupted to be sold an account, and a reader
+ * looking at a copy of Redline with no accounts behind it is told nothing at
+ * all, because there is nothing they could do about it.
  */
-function Entry({
-  flag,
-  isOpen,
-  onOpen,
-}: {
-  flag: Flag;
-  isOpen: boolean;
-  onOpen: () => void;
-}) {
-  const panelId = useId();
-  const owesWording = flag.severity !== "Worth knowing";
+function KeptNote({ saved }: { saved: SavedTo }) {
+  if (saved.kept) {
+    return (
+      <p className={styles.keptNote}>
+        This one is in your library now.{" "}
+        <Link href={savedReadingPath(saved.documentId)}>Open it there</Link> and
+        it comes back just as it is here.
+      </p>
+    );
+  }
 
-  return (
-    <li className={styles.entry}>
-      <button
-        type="button"
-        className={styles.entryButton}
-        aria-expanded={isOpen}
-        aria-controls={isOpen ? panelId : undefined}
-        onClick={onOpen}
-      >
-        <span className={`${styles.tier} ${TIER_WORD[flag.severity]}`}>
-          {flag.severity}
-        </span>
+  if (saved.why === "not-signed-in") {
+    return (
+      <p className={styles.keptNote}>
+        Nothing is kept while you are signed out.{" "}
+        <Link href={SIGN_IN_PATH}>Sign in</Link> and the next one stays in your
+        library.
+      </p>
+    );
+  }
 
-        <span className={styles.clause}>
-          {LABELS.get(flag.clauseType) ?? flag.clauseType}
-        </span>
+  if (saved.why === "would-not-keep") {
+    return (
+      <p className={styles.keptNote}>
+        This reading did not reach your library. It is all still on screen. Put
+        the document in again later if you want it kept.
+      </p>
+    );
+  }
 
-        <span className={styles.consequence}>{flag.consequence}</span>
-
-        <span
-          className={`${styles.quoteBlock} ${QUOTE_RULE[flag.severity]} ${
-            isOpen ? styles.quoteOpen : ""
-          }`}
-        >
-          <span className={styles.quoteMark}>The sentence it came from</span>
-          <span className={`${styles.quote} docType`}>
-            {flag.sourceSentence}
-          </span>
-        </span>
-      </button>
-
-      {isOpen &&
-        (flag.counterOffer ? (
-          <div className={styles.counter} id={panelId}>
-            <span className={styles.counterHead}>Counter-offer</span>
-            <p className={`${styles.counterBody} docType`}>
-              {flag.counterOffer}
-            </p>
-          </div>
-        ) : (
-          <p className={styles.noCounter} id={panelId}>
-            {owesWording
-              ? "No replacement wording came back for this one. You still have the sentence above to put to the other side."
-              : "No counter-offer. Redline flags this one so you know it is there."}
-          </p>
-        ))}
-    </li>
-  );
+  return null;
 }
 
 /**

@@ -11,13 +11,13 @@ the model again. Delete it, and it stays gone.
 
 **Blocked by:** 02, 07.
 
-**Status:** ready-for-agent
+**Status:** built; three criteria cannot be demonstrated without a running Supabase project (see BUILD-REPORT.md)
 
 - [ ] Analysing a document while signed in saves its extracted text, filename, summary,
       flags, and the red lines in force at that moment.
 - [ ] The library lists saved documents with filename and when they were analysed.
-- [ ] Reopening a saved document renders the stored analysis and makes no model call.
-- [ ] Flags on a reopened document still show their source sentences, and still
+- [x] Reopening a saved document renders the stored analysis and makes no model call.
+- [x] Flags on a reopened document still show their source sentences, and still
       highlight within the stored text.
 - [ ] Deleting a document removes it from the library, and it does not return on reload.
-- [ ] Editing red lines afterwards does not change an analysis already saved.
+- [x] Editing red lines afterwards does not change an analysis already saved.

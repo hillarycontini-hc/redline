@@ -39,11 +39,25 @@ export interface DroppedFlag {
   sourceSentence?: string;
 }
 
+/**
+ * A Critical or Serious flag that reached the reader with no replacement
+ * wording. Recorded the way a dropped flag is, so the gap is visible rather
+ * than silent. The flag itself is still shown: it is never dropped for want of
+ * a counter-offer, only for want of a source sentence.
+ */
+export interface MissingCounterOffer {
+  clauseType: string;
+  severity: Severity;
+  sourceSentence: string;
+}
+
 export interface Analysis {
   summary: string;
   flags: Flag[];
   /** Kept for logging and eval. Never rendered as flags. */
   dropped: DroppedFlag[];
+  /** Flags shown without a counter-offer, after the drafting pass. */
+  missingCounterOffers: MissingCounterOffer[];
 }
 
 /**
@@ -71,3 +85,25 @@ export interface ModelResponse {
   summary: string;
   flags: ModelFlag[];
 }
+
+/**
+ * One clause sent back to the model for replacement wording, when the first
+ * pass left a Critical or Serious flag without any. `ref` is carried through
+ * the call and back so each drafted counter-offer returns to the flag — and so
+ * to the source sentence — it was asked about.
+ */
+export interface CounterOfferRequest {
+  ref: number;
+  clauseType: string;
+  severity: Severity;
+  sourceSentence: string;
+  consequence: string;
+}
+
+export interface ChatMessage {
+  role: "system" | "user";
+  content: string;
+}
+
+/** The only thing the analysis needs from the outside world. Stubbed in tests. */
+export type CallModel = (messages: ChatMessage[]) => Promise<string>;

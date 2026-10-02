@@ -48,7 +48,13 @@
   grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
 }
 
+/* The document holds its place. The entries column runs longer than this one,
+   so without the sticky the sentence a reader just opened scrolls away behind
+   them — and the marked sentence is the whole point of opening the entry. */
 .documentColumn {
+  position: sticky;
+  top: 0;
+  align-self: start;
   padding: clamp(1.25rem, 3vw, 2.1rem);
   border-right: 1px solid var(--rule);
   min-width: 0;
@@ -105,7 +111,9 @@
 .documentText {
   margin-top: 0.9rem;
   padding: 0.85rem 0.95rem;
-  max-height: 32rem;
+  /* Held to the viewport so the whole column, head and action included, stays
+     on screen while it is stuck. */
+  max-height: min(32rem, 58vh);
   overflow-y: auto;
   background: var(--sheet);
   border: 1px solid var(--rule-soft);
@@ -115,6 +123,30 @@
   white-space: pre-wrap;
   overflow-wrap: break-word;
   tab-size: 4;
+}
+
+/* The open entry's sentence, where it sits in the reader's own paragraph. The
+   characters are the document's; the wash names the tier and the red rule is
+   the same open-quote underline the entry carries, so the two read as one
+   thing. Cloned decoration so both survive a line wrap. */
+.documentMark {
+  color: var(--ink);
+  background: var(--field-head);
+  border-bottom: 1px solid var(--due);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.markCritical {
+  background: var(--field-critical);
+}
+
+.markSerious {
+  background: var(--field-serious);
+}
+
+.markWorth {
+  background: var(--field-worth);
 }
 
 /* ---------------------------------------------------------------- the entry */
@@ -257,8 +289,28 @@
 }
 
 .entry {
-  padding: 1.15rem 0;
   border-bottom: 1px solid var(--rule-hair);
+}
+
+/* The whole line is the control, so reaching the sentence takes a mouse no
+   more than it takes a keyboard. Flat in every state: the row fills with the
+   sheet tint on hover and never lifts. */
+.entryButton {
+  display: block;
+  width: 100%;
+  padding: 1.15rem 0.6rem 1.15rem 0;
+  background: none;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 160ms var(--ease-out);
+}
+
+.entryButton:hover {
+  background: var(--sheet);
 }
 
 /* The tier word opens the line and carries its own rule, so the tier survives
@@ -289,6 +341,7 @@
 }
 
 .clause {
+  display: block;
   margin-top: 0.75rem;
   font-size: 1.08rem;
   font-weight: 600;
@@ -297,6 +350,7 @@
 }
 
 .consequence {
+  display: block;
   margin-top: 0.35rem;
   max-width: 52ch;
   color: var(--ink-2);
@@ -307,10 +361,24 @@
 /* The sentence the entry is answerable to. Set in the document's own face, and
    held behind a rule in the tier's colour so the quote reads as the document's
    rather than as ours. */
+/* Closed, it sits off the line in Ink 3. Opening brings it into alignment with
+   the entry and grows its underline: alignment is the found-it state. Colour
+   and offset carry it, never opacity. */
 .quoteBlock {
+  display: block;
   margin-top: 0.75rem;
   padding-left: 1rem;
   max-width: 54ch;
+  color: var(--ink-3);
+  transform: translateX(14px);
+  transition:
+    transform 420ms var(--ease-out),
+    color 420ms var(--ease-out);
+}
+
+.quoteOpen {
+  color: var(--ink);
+  transform: none;
 }
 
 .quoteCritical {
@@ -336,11 +404,58 @@
   text-transform: uppercase;
 }
 
+.quoteOpen .quoteMark {
+  color: var(--rule);
+}
+
+/* Inline, with the decoration cloned, so the red rule runs under every line
+   the sentence wraps onto. */
 .quote {
-  display: block;
-  color: var(--ink);
+  color: inherit;
   font-size: 0.98rem;
   line-height: 1.55;
+  border-bottom: 1px solid transparent;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  transition: border-color 360ms var(--ease-out);
+}
+
+.quoteOpen .quote {
+  border-bottom-color: var(--due);
+}
+
+/* ------------------------------------------------------- the counter-offer */
+
+.counter {
+  margin: 0.35rem 0 1.15rem;
+  padding: 0.8rem 1rem;
+  background: var(--sheet);
+  border-left: 1px solid var(--carbon);
+  max-width: 54ch;
+}
+
+.counterHead {
+  font-family: var(--font-archivo-narrow), var(--font-archivo), sans-serif;
+  display: block;
+  margin-bottom: 0.4rem;
+  color: var(--carbon);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.counterBody {
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+.noCounter {
+  margin: 0.35rem 0 1.15rem;
+  max-width: 52ch;
+  color: var(--ink-3);
+  font-size: 0.9rem;
+  line-height: 1.5;
 }
 
 .foot {
@@ -373,7 +488,9 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
+  /* Stacked, there is no second column to stay level with. */
   .documentColumn {
+    position: static;
     border-right: 0;
     border-bottom: 1px solid var(--rule);
   }
@@ -382,6 +499,16 @@
 @media (max-width: 40rem) {
   .documentText {
     max-height: 20rem;
+  }
+
+  /* No room to spend on the offset. The left rule carries the open state
+     instead, going due red to match the underline. */
+  .quoteBlock {
+    transform: none;
+  }
+
+  .quoteOpen {
+    border-left-color: var(--due);
   }
 
   .field {

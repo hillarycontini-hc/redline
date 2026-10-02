@@ -17,16 +17,16 @@ no wording appears.
 
 **Blocked by:** 02.
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Selecting a flag scrolls to and visibly highlights its source sentence within the
+- [x] Selecting a flag scrolls to and visibly highlights its source sentence within the
       rendered document text.
-- [ ] The highlighted span is the document's own characters, not the model's copy of
+- [x] The highlighted span is the document's own characters, not the model's copy of
       them.
-- [ ] Every Critical and Serious flag on screen shows a counter-offer.
-- [ ] Given a model response where a Critical or Serious flag carries no counter-offer,
+- [x] Every Critical and Serious flag on screen shows a counter-offer.
+- [x] Given a model response where a Critical or Serious flag carries no counter-offer,
       the analysis obtains one before returning. The flag is never shown without one,
       and is never dropped merely for lacking one.
-- [ ] No Worth knowing flag shows a counter-offer.
-- [ ] A counter-offer points at the same source sentence as its flag, and that sentence
+- [x] No Worth knowing flag shows a counter-offer.
+- [x] A counter-offer points at the same source sentence as its flag, and that sentence
       is locatable in the document.

@@ -38,7 +38,11 @@ export function openRouterCaller(): CallModel {
 
     if (!res.ok) {
       const body = await res.text().catch(() => "");
-      throw new Error(`OpenRouter ${res.status}: ${body.slice(0, 500)}`);
+      const detail = `OpenRouter ${res.status}: ${body.slice(0, 500)}`;
+      // A 429 is not a broken reading. The request never got a turn, so it
+      // gets its own error and its own words to the reader.
+      if (res.status === 429) throw new UpstreamBusyError(detail);
+      throw new Error(detail);
     }
 
     const json = (await res.json()) as {
@@ -53,3 +57,10 @@ export function openRouterCaller(): CallModel {
 }
 
 export class ConfigError extends Error {}
+
+/**
+ * The model was there and refused the turn: too many requests at once. Kept
+ * apart from every other failure because the reading was not broken, and
+ * telling the reader it was would be untrue. Nothing retries on its own.
+ */
+export class UpstreamBusyError extends Error {}

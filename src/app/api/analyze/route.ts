@@ -1,7 +1,11 @@
 import { analyze } from "@/lib/analysis/analyze.ts";
 import { SEED_RED_LINES } from "@/lib/analysis/red-lines.ts";
 import type { AnalyzeResponse } from "@/lib/analysis/types.ts";
-import { ConfigError, openRouterCaller } from "@/lib/openrouter.ts";
+import {
+  ConfigError,
+  UpstreamBusyError,
+  openRouterCaller,
+} from "@/lib/openrouter.ts";
 import { MALFORMED_JSON, checkRequest, isJsonRequest } from "./validate.ts";
 
 /**
@@ -60,6 +64,16 @@ export async function POST(request: Request): Promise<Response> {
       callModel,
     });
   } catch (error) {
+    // Busy is not broken. Saying the reading came back in pieces when it never
+    // started would be the wrong thing to tell the reader, and nothing here
+    // retries on its own.
+    if (error instanceof UpstreamBusyError) {
+      console.error("[analyze] the model was busy", error);
+      return refuse(
+        429,
+        "Too many documents are going through at once, and this one did not get a turn. Wait a minute and read it again.",
+      );
+    }
     console.error("[analyze] the model call failed", error);
     return refuse(
       502,
@@ -72,6 +86,14 @@ export async function POST(request: Request): Promise<Response> {
   for (const d of analysis.dropped) {
     console.warn(
       `[analyze] flag refused: reason=${d.reason} clauseType=${d.clauseType ?? "(none)"} sourceSentence=${JSON.stringify(d.sourceSentence ?? null)}`,
+    );
+  }
+
+  // A flag is never dropped for want of a counter-offer, so the gap is logged
+  // instead of hidden. The screen says so too, on the entry itself.
+  for (const m of analysis.missingCounterOffers) {
+    console.warn(
+      `[analyze] no counter-offer drafted: clauseType=${m.clauseType} severity=${m.severity}`,
     );
   }
 

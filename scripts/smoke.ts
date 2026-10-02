@@ -88,6 +88,7 @@ console.log(`  caught       ${sidecar.plantedClauses.length - missed.length}`);
 console.log(`  missed       ${missed.length}${missed.length ? "  " + missed.map((m) => m.clauseType).join(", ") : ""}`);
 console.log(`  shown        ${analysis.flags.length}`);
 console.log(`  verified     ${analysis.flags.length - unlocatable} of ${analysis.flags.length} source sentences found in the document`);
+console.log(`  no wording   ${analysis.missingCounterOffers.length}${analysis.missingCounterOffers.length ? "  " + analysis.missingCounterOffers.map((m) => m.clauseType).join(", ") : ""}`);
 
 rule("=");
 if (unlocatable > 0) {

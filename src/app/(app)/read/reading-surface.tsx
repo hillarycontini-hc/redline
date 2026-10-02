@@ -1,6 +1,12 @@
 "use client";
 
-import { useId, useState, useSyncExternalStore } from "react";
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { SEED_RED_LINES } from "@/lib/analysis/red-lines.ts";
 import type { AnalyzeResponse, Flag, Severity } from "@/lib/analysis/types.ts";
 import { takeHandoff, type Handoff } from "@/lib/handoff.ts";
@@ -26,6 +32,13 @@ const QUOTE_RULE: Record<Severity, string> = {
   Critical: styles.quoteCritical,
   Serious: styles.quoteSerious,
   "Worth knowing": styles.quoteWorth,
+};
+
+/** The wash behind the sentence where it sits in the document itself. */
+const MARK_FIELD: Record<Severity, string> = {
+  Critical: styles.markCritical,
+  Serious: styles.markSerious,
+  "Worth knowing": styles.markWorth,
 };
 
 const LABELS = new Map(SEED_RED_LINES.map((r) => [r.clauseType, r.label]));
@@ -80,11 +93,16 @@ export function ReadingSurface() {
   const [failure, setFailure] = useState<string | null>(null);
   const [readAt, setReadAt] = useState<string | null>(null);
 
+  // Which entry is open. One at a time, the way a reader works down a
+  // statement, and the open entry is the one marked in the document column.
+  const [openEntry, setOpenEntry] = useState<number | null>(null);
+
   function clearStatement() {
     setStatus("idle");
     setResult(null);
     setFailure(null);
     setReadAt(null);
+    setOpenEntry(null);
   }
 
   function confirm(name: string, text: string) {
@@ -153,6 +171,9 @@ export function ReadingSurface() {
 
     const payload = (await response.json()) as AnalyzeResponse;
     setResult(payload);
+    // The first line opens itself, so the marked sentence and the wording to
+    // send back are both on screen without a click.
+    setOpenEntry(payload.flags.length > 0 ? 0 : null);
     setReadAt(
       new Date().toLocaleString("en-GB", {
         day: "numeric",
@@ -164,6 +185,12 @@ export function ReadingSurface() {
     );
     setStatus("done");
   }
+
+  // The entry that is open decides which sentence is marked in the document.
+  const marked =
+    status === "done" && result && openEntry !== null
+      ? (result.flags[openEntry] ?? null)
+      : null;
 
   return (
     <>
@@ -202,9 +229,7 @@ export function ReadingSurface() {
                 read in this browser. Check it against the copy in your hand.
               </p>
 
-              <div className={`${styles.documentText} docType`}>
-                {doc.text}
-              </div>
+              <DocumentBody text={doc.text} marked={marked} />
 
               <div className={styles.actions}>
                 <button
@@ -295,10 +320,69 @@ export function ReadingSurface() {
             status={status}
             result={result}
             failure={failure}
+            openEntry={openEntry}
+            onOpen={setOpenEntry}
           />
         </section>
       </div>
     </>
+  );
+}
+
+/**
+ * The whole parse, as set type, with the open entry's sentence marked where it
+ * sits in the reader's own paragraph.
+ *
+ * The marked span is sliced out of this text with the flag's own character
+ * range, worked out by the citation check when the flag was made. The model's
+ * copy of the sentence is never rendered here and the text is never searched
+ * for it: what the reader is looking at is their document.
+ */
+function DocumentBody({ text, marked }: { text: string; marked: Flag | null }) {
+  const boxRef = useRef<HTMLDivElement>(null);
+  const markRef = useRef<HTMLElement>(null);
+
+  const start = marked?.location.start ?? -1;
+  const end = marked?.location.end ?? -1;
+
+  useEffect(() => {
+    const box = boxRef.current;
+    const mark = markRef.current;
+    if (!box || !mark) return;
+
+    // Scroll the document's own box and nothing else. The reader's place on
+    // the page is theirs to keep.
+    const boxTop = box.getBoundingClientRect().top;
+    const markBox = mark.getBoundingClientRect();
+    const centred =
+      box.scrollTop +
+      (markBox.top - boxTop) -
+      (box.clientHeight - markBox.height) / 2;
+
+    const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    box.scrollTo({
+      top: Math.max(0, centred),
+      behavior: still ? "auto" : "smooth",
+    });
+  }, [start, end, text]);
+
+  return (
+    <div className={`${styles.documentText} docType`} ref={boxRef}>
+      {marked ? (
+        <>
+          {text.slice(0, start)}
+          <mark
+            ref={markRef}
+            className={`${styles.documentMark} ${MARK_FIELD[marked.severity]}`}
+          >
+            {text.slice(start, end)}
+          </mark>
+          {text.slice(end)}
+        </>
+      ) : (
+        text
+      )}
+    </div>
   );
 }
 
@@ -307,11 +391,15 @@ function Statement({
   status,
   result,
   failure,
+  openEntry,
+  onOpen,
 }: {
   hasDocument: boolean;
   status: Status;
   result: AnalyzeResponse | null;
   failure: string | null;
+  openEntry: number | null;
+  onOpen: (index: number | null) => void;
 }) {
   if (status === "failed") {
     return (
@@ -350,7 +438,12 @@ function Statement({
       ) : (
         <ul className={styles.entries}>
           {result.flags.map((flag, index) => (
-            <Entry key={`${flag.clauseType}-${index}`} flag={flag} />
+            <Entry
+              key={`${flag.clauseType}-${index}`}
+              flag={flag}
+              isOpen={index === openEntry}
+              onOpen={() => onOpen(index === openEntry ? null : index)}
+            />
           ))}
         </ul>
       )}
@@ -369,23 +462,70 @@ function Statement({
   );
 }
 
-function Entry({ flag }: { flag: Flag }) {
+/**
+ * One line item. The whole row is the control, so selecting it needs a mouse
+ * no more than it needs a keyboard, and opening it does two things at once:
+ * the sentence in the document column is marked, and the wording to send back
+ * appears beneath the row.
+ */
+function Entry({
+  flag,
+  isOpen,
+  onOpen,
+}: {
+  flag: Flag;
+  isOpen: boolean;
+  onOpen: () => void;
+}) {
+  const panelId = useId();
+  const owesWording = flag.severity !== "Worth knowing";
+
   return (
     <li className={styles.entry}>
-      <span className={`${styles.tier} ${TIER_WORD[flag.severity]}`}>
-        {flag.severity}
-      </span>
+      <button
+        type="button"
+        className={styles.entryButton}
+        aria-expanded={isOpen}
+        aria-controls={isOpen ? panelId : undefined}
+        onClick={onOpen}
+      >
+        <span className={`${styles.tier} ${TIER_WORD[flag.severity]}`}>
+          {flag.severity}
+        </span>
 
-      <h2 className={styles.clause}>
-        {LABELS.get(flag.clauseType) ?? flag.clauseType}
-      </h2>
+        <span className={styles.clause}>
+          {LABELS.get(flag.clauseType) ?? flag.clauseType}
+        </span>
 
-      <p className={styles.consequence}>{flag.consequence}</p>
+        <span className={styles.consequence}>{flag.consequence}</span>
 
-      <p className={`${styles.quoteBlock} ${QUOTE_RULE[flag.severity]}`}>
-        <span className={styles.quoteMark}>The sentence it came from</span>
-        <span className={`${styles.quote} docType`}>{flag.sourceSentence}</span>
-      </p>
+        <span
+          className={`${styles.quoteBlock} ${QUOTE_RULE[flag.severity]} ${
+            isOpen ? styles.quoteOpen : ""
+          }`}
+        >
+          <span className={styles.quoteMark}>The sentence it came from</span>
+          <span className={`${styles.quote} docType`}>
+            {flag.sourceSentence}
+          </span>
+        </span>
+      </button>
+
+      {isOpen &&
+        (flag.counterOffer ? (
+          <div className={styles.counter} id={panelId}>
+            <span className={styles.counterHead}>Counter-offer</span>
+            <p className={`${styles.counterBody} docType`}>
+              {flag.counterOffer}
+            </p>
+          </div>
+        ) : (
+          <p className={styles.noCounter} id={panelId}>
+            {owesWording
+              ? "No replacement wording came back for this one. You still have the sentence above to put to the other side."
+              : "No counter-offer. Redline flags this one so you know it is there."}
+          </p>
+        ))}
     </li>
   );
 }

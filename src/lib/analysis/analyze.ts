@@ -1,23 +1,21 @@
 import { locate } from "./citation.ts";
+import { withCounterOffers } from "./counter-offer.ts";
+import { parseJsonObject } from "./json.ts";
 import { lowerTier, requiresCounterOffer } from "./red-lines.ts";
 import { SYSTEM_PROMPT, buildUserPrompt } from "./prompt.ts";
 import type {
   Analysis,
+  CallModel,
   DroppedFlag,
   Flag,
+  MissingCounterOffer,
   ModelFlag,
   ModelResponse,
   RedLine,
   Severity,
 } from "./types.ts";
 
-export interface ChatMessage {
-  role: "system" | "user";
-  content: string;
-}
-
-/** The only thing analyze() needs from the outside world. Stubbed in tests. */
-export type CallModel = (messages: ChatMessage[]) => Promise<string>;
+export type { CallModel, ChatMessage } from "./types.ts";
 
 export interface AnalyzeInput {
   documentText: string;
@@ -29,6 +27,10 @@ export interface AnalyzeInput {
  * The analysis module. This is the seam: (documentText, redLines) in,
  * (summary, flags) out. It is the single place the model is called for
  * analysis and the single place the citation check runs.
+ *
+ * One call reads the document. A second one runs only when the first left a
+ * Critical or Serious flag without replacement wording, and the route and the
+ * screen above this never learn which happened.
  */
 export async function analyze(input: AnalyzeInput): Promise<Analysis> {
   const { documentText, redLines, callModel } = input;
@@ -39,7 +41,8 @@ export async function analyze(input: AnalyzeInput): Promise<Analysis> {
   ]);
 
   const parsed = parseModelResponse(raw);
-  return enforce(documentText, redLines, parsed);
+  const read = enforce(documentText, redLines, parsed);
+  return withCounterOffers(read, callModel);
 }
 
 /**
@@ -111,11 +114,22 @@ export function enforce(
       a.location.start - b.location.start,
   );
 
+  // The gaps as the first pass left them. The drafting pass closes what it
+  // can and rewrites this list; a flag is never dropped for being on it.
+  const missingCounterOffers: MissingCounterOffer[] = flags
+    .filter((f) => requiresCounterOffer(f.severity) && f.counterOffer === undefined)
+    .map((f) => ({
+      clauseType: f.clauseType,
+      severity: f.severity,
+      sourceSentence: f.sourceSentence,
+    }));
+
   return {
     summary:
       typeof response.summary === "string" ? response.summary.trim() : "",
     flags,
     dropped,
+    missingCounterOffers,
   };
 }
 
@@ -136,30 +150,15 @@ function isModelFlag(x: unknown): x is ModelFlag {
 }
 
 /**
- * Models sometimes wrap JSON in a code fence despite instructions. Strip it,
- * parse, and insist on the top-level shape. Anything else is an error, not a
- * guess.
+ * Parse the reading back and insist on the top-level shape. Anything else is
+ * an error, not a guess.
  */
 export function parseModelResponse(raw: string): ModelResponse {
-  let text = raw.trim();
-  const fence = text.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/);
-  if (fence) text = fence[1];
+  const data = parseJsonObject(raw);
 
-  let data: unknown;
-  try {
-    data = JSON.parse(text);
-  } catch {
-    throw new Error("Model response was not valid JSON");
-  }
-
-  if (
-    typeof data !== "object" ||
-    data === null ||
-    typeof (data as ModelResponse).summary !== "string" ||
-    !Array.isArray((data as ModelResponse).flags)
-  ) {
+  if (typeof data.summary !== "string" || !Array.isArray(data.flags)) {
     throw new Error("Model response did not match the expected shape");
   }
 
-  return data as ModelResponse;
+  return data as unknown as ModelResponse;
 }

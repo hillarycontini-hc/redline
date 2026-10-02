@@ -1,0 +1,59 @@
+name: CI
+
+# Every push and every pull request runs the gates. The citation check is the
+# one that matters most: a source sentence that cannot be located in its
+# document is a red build, not a silent defect (ADR 0001).
+# Pull requests are gated wherever they come from. Pushes are gated on master
+# only: a push to a branch that has a pull request open would otherwise run the
+# same commit twice, and the default branch here is master, not main.
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gates:
+    name: Gates
+    runs-on: ubuntu-latest
+
+    # No secret of any kind, and no env block on purpose. The citation check
+    # reads the fixtures and the gold set out of the checkout and calls no
+    # model, so the suite needs no OPENROUTER_API_KEY and no Supabase
+    # variable. A test here that needs a key is a defect in the test.
+    steps:
+      - name: Check out
+        uses: actions/checkout@v5
+
+      # No version here on purpose. pnpm/action-setup reads the pinned version
+      # from the packageManager field in package.json, so it is written once.
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      # Separate steps, so a red build names the gate that broke.
+      - name: Typecheck
+        run: pnpm run typecheck
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Unit tests
+        run: pnpm test
+
+      - name: Citation check
+        run: pnpm run test:citations

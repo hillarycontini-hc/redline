@@ -13,14 +13,14 @@ and watch the build fail and name the offending quote.
 
 **Blocked by:** None — can start immediately.
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] The application scaffold, the analysis module, the parsing module, the gold set,
+- [x] The application scaffold, the analysis module, the parsing module, the gold set,
       and their tests are committed to master.
-- [ ] A workflow runs on every push and pull request, running type checking, linting,
+- [x] A workflow runs on every push and pull request, running type checking, linting,
       the unit tests, and the citation check.
-- [ ] A gold set entry whose recorded analysis contains a source sentence absent from
+- [x] A gold set entry whose recorded analysis contains a source sentence absent from
       its document text fails the workflow, and the output names that sentence.
 - [ ] A pull request cannot merge while that workflow is failing.
-- [ ] The workflow installs with pnpm and needs no credential to run — the citation
+- [x] The workflow installs with pnpm and needs no credential to run — the citation
       check reads fixtures and calls no model.

@@ -7,8 +7,14 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
+import { MAX_QUESTION_CHARS } from "@/app/api/ask/validate.ts";
 import { SEED_RED_LINES } from "@/lib/analysis/red-lines.ts";
-import type { AnalyzeResponse, Flag, Severity } from "@/lib/analysis/types.ts";
+import type {
+  AnalyzeResponse,
+  AskResponse,
+  Flag,
+  Severity,
+} from "@/lib/analysis/types.ts";
 import { takeHandoff, type Handoff } from "@/lib/handoff.ts";
 import { checkUsable, extractText } from "@/lib/parse/extract.ts";
 import styles from "./read.module.css";
@@ -41,6 +47,17 @@ const MARK_FIELD: Record<Severity, string> = {
   "Worth knowing": styles.markWorth,
 };
 
+/**
+ * A sentence to mark in the document column, and the wash to mark it with. An
+ * open entry and a quoted sentence under an answer both arrive as one of
+ * these, so the marking runs once and one thing is marked at a time.
+ */
+interface Mark {
+  start: number;
+  end: number;
+  field: string;
+}
+
 const LABELS = new Map(SEED_RED_LINES.map((r) => [r.clauseType, r.label]));
 
 interface DocumentText {
@@ -51,6 +68,9 @@ interface DocumentText {
 type Status = "idle" | "running" | "done" | "failed";
 
 const PASTED = "Pasted text";
+
+const NO_SERVER =
+  "Redline could not get through to the server. Check your connection and try it again.";
 
 /**
  * The landing page's entry leaves the text it confirmed in sessionStorage.
@@ -97,12 +117,40 @@ export function ReadingSurface() {
   // statement, and the open entry is the one marked in the document column.
   const [openEntry, setOpenEntry] = useState<number | null>(null);
 
+  // The query line at the foot of the statement. One question at a time: a
+  // second one replaces the first, here and in the module behind it, so there
+  // is no transcript to carry a wrong turn forward.
+  const [asking, setAsking] = useState(false);
+  const [answer, setAnswer] = useState<AskResponse | null>(null);
+  const [askFailure, setAskFailure] = useState<string | null>(null);
+  const [openCitation, setOpenCitation] = useState<number | null>(null);
+
+  function clearQuery() {
+    setAsking(false);
+    setAnswer(null);
+    setAskFailure(null);
+    setOpenCitation(null);
+  }
+
   function clearStatement() {
     setStatus("idle");
     setResult(null);
     setFailure(null);
     setReadAt(null);
     setOpenEntry(null);
+    // The answer belonged to the document that is going away with it.
+    clearQuery();
+  }
+
+  // One sentence is marked at a time, so opening either side closes the other.
+  function openEntryAt(index: number | null) {
+    setOpenEntry(index);
+    setOpenCitation(null);
+  }
+
+  function openCitationAt(index: number | null) {
+    setOpenCitation(index);
+    if (index !== null) setOpenEntry(null);
   }
 
   function confirm(name: string, text: string) {
@@ -151,9 +199,7 @@ export function ReadingSurface() {
       });
     } catch {
       setStatus("failed");
-      setFailure(
-        "Redline could not get through to the server. Check your connection and try it again.",
-      );
+      setFailure(NO_SERVER);
       return;
     }
 
@@ -162,10 +208,7 @@ export function ReadingSurface() {
         message?: string;
       } | null;
       setStatus("failed");
-      setFailure(
-        body?.message ??
-          "Redline could not get through to the server. Check your connection and try it again.",
-      );
+      setFailure(body?.message ?? NO_SERVER);
       return;
     }
 
@@ -173,7 +216,7 @@ export function ReadingSurface() {
     setResult(payload);
     // The first line opens itself, so the marked sentence and the wording to
     // send back are both on screen without a click.
-    setOpenEntry(payload.flags.length > 0 ? 0 : null);
+    openEntryAt(payload.flags.length > 0 ? 0 : null);
     setReadAt(
       new Date().toLocaleString("en-GB", {
         day: "numeric",
@@ -186,10 +229,66 @@ export function ReadingSurface() {
     setStatus("done");
   }
 
-  // The entry that is open decides which sentence is marked in the document.
-  const marked =
+  /**
+   * One question, sent with the document and with nothing else: no summary, no
+   * flags, no earlier question or answer. The answer is grounded in the
+   * document's own text, and anything that came out of the model before would
+   * close that chain of evidence on itself.
+   */
+  async function askQuestion(confirmed: DocumentText, question: string) {
+    setAsking(true);
+    setAskFailure(null);
+    // A second question replaces the first rather than joining it.
+    setAnswer(null);
+    setOpenCitation(null);
+
+    let response: Response;
+    try {
+      response = await fetch("/api/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ documentText: confirmed.text, question }),
+      });
+    } catch {
+      setAsking(false);
+      setAskFailure(NO_SERVER);
+      return;
+    }
+
+    if (!response.ok) {
+      const body = (await response.json().catch(() => null)) as {
+        message?: string;
+      } | null;
+      setAsking(false);
+      setAskFailure(body?.message ?? NO_SERVER);
+      return;
+    }
+
+    const payload = (await response.json()) as AskResponse;
+    setAnswer(payload);
+    // The first sentence quoted opens itself, so the reader can see it where
+    // it sits in their own document without a further click. An answer with
+    // nothing quoted marks nothing, because there is nothing to point at.
+    if (payload.citations.length > 0) openCitationAt(0);
+    setAsking(false);
+  }
+
+  // The open entry decides which sentence is marked in the document, and so
+  // does a quoted sentence the reader has selected under an answer. One or the
+  // other: opening either closes the other.
+  const openFlag =
     status === "done" && result && openEntry !== null
       ? (result.flags[openEntry] ?? null)
+      : null;
+  const openQuote =
+    answer && openCitation !== null
+      ? (answer.citations[openCitation] ?? null)
+      : null;
+
+  const marked: Mark | null = openFlag
+    ? { ...openFlag.location, field: MARK_FIELD[openFlag.severity] }
+    : openQuote
+      ? { ...openQuote.location, field: styles.markAnswer }
       : null;
 
   return (
@@ -321,8 +420,22 @@ export function ReadingSurface() {
             result={result}
             failure={failure}
             openEntry={openEntry}
-            onOpen={setOpenEntry}
+            onOpen={openEntryAt}
           />
+
+          {/* The query line, at the foot of the statement. It is here as soon
+              as there is a document to ask about: the reader does not have to
+              run the reading first to ask a question of their own. */}
+          {doc && (
+            <QueryLine
+              asking={asking}
+              answer={answer}
+              failure={askFailure}
+              openCitation={openCitation}
+              onAsk={(question) => void askQuestion(doc, question)}
+              onOpen={openCitationAt}
+            />
+          )}
         </section>
       </div>
     </>
@@ -330,20 +443,21 @@ export function ReadingSurface() {
 }
 
 /**
- * The whole parse, as set type, with the open entry's sentence marked where it
- * sits in the reader's own paragraph.
+ * The whole parse, as set type, with the open sentence marked where it sits in
+ * the reader's own paragraph — whether it came from an entry on the statement
+ * or from an answer's citation.
  *
- * The marked span is sliced out of this text with the flag's own character
- * range, worked out by the citation check when the flag was made. The model's
+ * The marked span is sliced out of this text with the character range the
+ * citation check worked out when the flag or the citation was made. The model's
  * copy of the sentence is never rendered here and the text is never searched
  * for it: what the reader is looking at is their document.
  */
-function DocumentBody({ text, marked }: { text: string; marked: Flag | null }) {
+function DocumentBody({ text, marked }: { text: string; marked: Mark | null }) {
   const boxRef = useRef<HTMLDivElement>(null);
   const markRef = useRef<HTMLElement>(null);
 
-  const start = marked?.location.start ?? -1;
-  const end = marked?.location.end ?? -1;
+  const start = marked?.start ?? -1;
+  const end = marked?.end ?? -1;
 
   useEffect(() => {
     const box = boxRef.current;
@@ -373,7 +487,7 @@ function DocumentBody({ text, marked }: { text: string; marked: Flag | null }) {
           {text.slice(0, start)}
           <mark
             ref={markRef}
-            className={`${styles.documentMark} ${MARK_FIELD[marked.severity]}`}
+            className={`${styles.documentMark} ${marked.field}`}
           >
             {text.slice(start, end)}
           </mark>
@@ -527,5 +641,141 @@ function Entry({
           </p>
         ))}
     </li>
+  );
+}
+
+/**
+ * The query line, at the foot of the statement. One question at a time, and
+ * the answer that comes back either quotes the document or says the document
+ * does not say.
+ *
+ * There is no transcript. A second question replaces the first, which is what
+ * the module behind it does too: each question is answered on its own, so a
+ * wrong turn in one cannot reach the next.
+ */
+function QueryLine({
+  asking,
+  answer,
+  failure,
+  openCitation,
+  onAsk,
+  onOpen,
+}: {
+  asking: boolean;
+  answer: AskResponse | null;
+  failure: string | null;
+  openCitation: number | null;
+  onAsk: (question: string) => void;
+  onOpen: (index: number | null) => void;
+}) {
+  const fieldId = useId();
+  const [question, setQuestion] = useState("");
+
+  const ready = question.trim().length > 0 && !asking;
+
+  return (
+    <section className={styles.query}>
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          if (ready) onAsk(question.trim());
+        }}
+      >
+        <label className={styles.label} htmlFor={fieldId}>
+          Ask about this document
+        </label>
+
+        <p className={styles.queryNote}>
+          Answers come out of this document and quote the sentences they rest
+          on. One question at a time: a new one replaces the last.
+        </p>
+
+        <div className={styles.queryRow}>
+          <input
+            id={fieldId}
+            type="text"
+            className={styles.queryField}
+            placeholder="Can the Client end this without paying me?"
+            maxLength={MAX_QUESTION_CHARS}
+            value={question}
+            disabled={asking}
+            onChange={(event) => setQuestion(event.target.value)}
+          />
+          <button type="submit" className={styles.submit} disabled={!ready}>
+            {asking ? "Asking" : "Ask"}
+          </button>
+        </div>
+      </form>
+
+      {failure && (
+        <p className={styles.error} role="alert">
+          {failure}
+        </p>
+      )}
+
+      {asking && <p className={styles.waiting}>Looking through the document.</p>}
+
+      {!asking && answer && (
+        <Answer answer={answer} openCitation={openCitation} onOpen={onOpen} />
+      )}
+    </section>
+  );
+}
+
+/**
+ * What came back. Two different things, and they do not look alike.
+ *
+ * An answer the document supports arrives on its own panel with the sentences
+ * it rests on beneath it, each selectable and each marked in the document
+ * column. An answer with nothing quoted is not an answer at all — it is the
+ * fixed response saying the document does not say, and it is set as a plain
+ * note with no panel and no quotes, so it can never be read as grounded.
+ */
+function Answer({
+  answer,
+  openCitation,
+  onOpen,
+}: {
+  answer: AskResponse;
+  openCitation: number | null;
+  onOpen: (index: number | null) => void;
+}) {
+  if (answer.citations.length === 0) {
+    return <p className={styles.unanswered}>{answer.answer}</p>;
+  }
+
+  return (
+    <>
+      <p className={styles.answer}>
+        <span className={styles.answerHead}>Answer</span>
+        {answer.answer}
+      </p>
+
+      <span className={styles.citationsHead}>
+        {answer.citations.length === 1
+          ? "The sentence it rests on"
+          : "The sentences it rests on"}
+      </span>
+
+      <ul className={styles.citations}>
+        {answer.citations.map((citation, index) => {
+          const isOpen = index === openCitation;
+          return (
+            <li key={citation.location.start}>
+              <button
+                type="button"
+                className={`${styles.citation} ${isOpen ? styles.citationOpen : ""}`}
+                aria-pressed={isOpen}
+                onClick={() => onOpen(isOpen ? null : index)}
+              >
+                <span className={`${styles.citationQuote} docType`}>
+                  {citation.sourceSentence}
+                </span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    </>
   );
 }

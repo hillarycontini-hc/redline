@@ -149,6 +149,12 @@
   background: var(--field-worth);
 }
 
+/* A sentence an answer rests on. No tier to name, so it takes the green head
+   wash and the same red underline an open quote carries. */
+.markAnswer {
+  background: var(--field-head);
+}
+
 /* ---------------------------------------------------------------- the entry */
 
 .field {
@@ -522,5 +528,176 @@
   .submit {
     width: 100%;
     text-align: center;
+  }
+}
+
+/* ------------------------------------------------------------- the query line
+
+   The statement's query line, at the foot of the entries column, opened by the
+   double rule that closes an account section. Everything here is a token. */
+
+.query {
+  margin-top: 1.4rem;
+  padding-top: 1rem;
+  border-top: 3px double var(--rule);
+}
+
+.queryNote {
+  margin-top: 0.5rem;
+  max-width: 54ch;
+  color: var(--ink-3);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.queryRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+/* The one field in this world set in the product's own face rather than the
+   document's. What the reader types here is their question, not a specimen of
+   their agreement, and a question set in Tinos would read as a quotation from
+   it. The frame, the fill and the red caret are the system's. */
+.queryField {
+  flex: 1;
+  min-width: 12rem;
+  padding: 0.65rem 0.8rem;
+  background: var(--sheet);
+  border: 1px solid var(--rule-soft);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.queryField::placeholder {
+  color: var(--ink-3);
+}
+
+.queryField:hover:not(:disabled) {
+  border-color: var(--rule);
+}
+
+.queryField:disabled {
+  color: var(--ink-3);
+}
+
+/* The answer the document carries. Same panel as the summary, same green left
+   rule: both are the product's own voice reporting what the text says. */
+.answer {
+  margin-top: 0.9rem;
+  padding: 0.8rem 1rem;
+  background: var(--sheet);
+  border-left: 1px solid var(--rule);
+  max-width: 54ch;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.answerHead {
+  font-family: var(--font-archivo-narrow), var(--font-archivo), sans-serif;
+  display: block;
+  margin-bottom: 0.4rem;
+  color: var(--rule);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* The fixed response, when the document does not say. Deliberately not the
+   answer panel: no fill, no head, no quote, so an answer with nothing behind
+   it can never be read as one that is held to a sentence. */
+.unanswered {
+  margin-top: 0.9rem;
+  padding-left: 0.85rem;
+  border-left: 1px solid var(--rule-soft);
+  max-width: 48ch;
+  color: var(--ink-2);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.citationsHead {
+  font-family: var(--font-archivo-narrow), var(--font-archivo), sans-serif;
+  display: block;
+  margin-top: 0.9rem;
+  color: var(--ink-3);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.citations {
+  margin-top: 0.35rem;
+  border-top: 1px solid var(--rule-hair);
+  list-style: none;
+}
+
+.citations > li {
+  border-bottom: 1px solid var(--rule-hair);
+}
+
+/* Selectable the way an entry is, and it does the same thing: the sentence is
+   marked where it sits in the document column. Closed it sits off the line in
+   Ink 3; opening brings it into alignment and grows the due-red underline. */
+.citation {
+  display: block;
+  width: 100%;
+  padding: 0.6rem 0.6rem 0.6rem 1rem;
+  background: none;
+  border: 0;
+  border-left: 1px solid var(--rule-soft);
+  color: var(--ink-3);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transform: translateX(14px);
+  transition:
+    transform 420ms var(--ease-out),
+    color 420ms var(--ease-out),
+    background 160ms var(--ease-out);
+}
+
+.citation:hover {
+  background: var(--sheet);
+}
+
+.citationOpen {
+  border-left-color: var(--rule);
+  color: var(--ink);
+  transform: none;
+}
+
+.citationQuote {
+  color: inherit;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  border-bottom: 1px solid transparent;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  transition: border-color 360ms var(--ease-out);
+}
+
+.citationOpen .citationQuote {
+  border-bottom-color: var(--due);
+}
+
+@media (max-width: 40rem) {
+  /* No room to spend on the offset, as on the entries above. */
+  .citation {
+    transform: none;
+  }
+
+  .citationOpen {
+    border-left-color: var(--due);
+  }
+
+  .queryRow {
+    flex-direction: column;
   }
 }

@@ -16,6 +16,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { analyze } from "../src/lib/analysis/analyze.ts";
 import { locate } from "../src/lib/analysis/citation.ts";
+import { DOCUMENT_DOES_NOT_ADDRESS, ask } from "../src/lib/analysis/question.ts";
 import { SEED_RED_LINES } from "../src/lib/analysis/red-lines.ts";
 import { openRouterCaller } from "../src/lib/openrouter.ts";
 
@@ -90,10 +91,67 @@ console.log(`  shown        ${analysis.flags.length}`);
 console.log(`  verified     ${analysis.flags.length - unlocatable} of ${analysis.flags.length} source sentences found in the document`);
 console.log(`  no wording   ${analysis.missingCounterOffers.length}${analysis.missingCounterOffers.length ? "  " + analysis.missingCounterOffers.map((m) => m.clauseType).join(", ") : ""}`);
 
+// The question box, on the same document and through the same live model. Two
+// questions: one the document answers, and one it says nothing about. Each is
+// asked on its own, so nothing from the first goes with the second.
+const QUESTIONS = [
+  "Can the other side end this agreement without paying for work already started?",
+  "Does the Client pay for my health insurance?",
+];
+
+console.log(`\nQUESTION BOX`);
+rule();
+
+let unquotable = 0;
+for (const question of QUESTIONS) {
+  const answered = await ask({
+    documentText,
+    question,
+    callModel: openRouterCaller(),
+  });
+
+  const fixed = answered.answer === DOCUMENT_DOES_NOT_ADDRESS;
+  console.log(`\n  Q  ${question}`);
+  console.log(`  A  ${answered.answer}`);
+
+  if (answered.citations.length === 0) {
+    console.log(
+      `     nothing quoted${fixed ? "  (the fixed response)" : "  *** AN ANSWER WITH NOTHING BEHIND IT ***"}`,
+    );
+    if (!fixed) unquotable += 1;
+  }
+
+  for (const citation of answered.citations) {
+    const found = locate(documentText, citation.sourceSentence) !== null;
+    if (!found) unquotable += 1;
+    console.log(
+      `     the sentence it rests on${found ? "" : "  *** NOT IN THE DOCUMENT ***"}:`,
+    );
+    console.log(`       "${citation.sourceSentence}"`);
+  }
+
+  if (answered.dropped.length > 0) {
+    console.log(`     refused  ${answered.dropped.length} quote(s) could not be placed`);
+  }
+}
+
 rule("=");
-if (unlocatable > 0) {
-  console.error(`\nFAILED: ${unlocatable} flag(s) cited a sentence that is not in the document.`);
-  console.error("ADR 0001: a flag whose source sentence cannot be shown is a bug, not a gap.\n");
+if (unlocatable > 0 || unquotable > 0) {
+  if (unlocatable > 0) {
+    console.error(
+      `\nFAILED: ${unlocatable} flag(s) cited a sentence that is not in the document.`,
+    );
+  }
+  if (unquotable > 0) {
+    console.error(
+      `\nFAILED: ${unquotable} answer(s) reached the reader with no sentence behind them.`,
+    );
+  }
+  console.error(
+    "ADR 0001: a claim about the document whose sentence cannot be shown is a bug, not a gap.\n",
+  );
   process.exit(1);
 }
-console.log(`\nEvery flag shown cites a sentence that is really in the document.\n`);
+console.log(
+  `\nEvery flag and every answer shown cites a sentence that is really in the document.\n`,
+);

@@ -11,19 +11,20 @@ and get told the document does not address it, with nothing quoted.
 
 **Blocked by:** 02.
 
-**Gated on a decision:** whether the question box may answer from the summary or only
-from the source text. The spec recommends source text only, or citations become
-circular.
+**Decision taken 2026-10-02:** the question box answers from the document's own text
+only, never from the summary. The summary is itself model output, so a citation into it
+proves nothing about the document and the chain of evidence closes on itself. Recorded
+as D2 in `BUILD-REPORT.md`. This ticket is no longer gated.
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Asking a question returns an answer together with one or more citations, each
+- [x] Asking a question returns an answer together with one or more citations, each
       quoted verbatim from the document.
-- [ ] Every citation is locatable in the document text under the same normalisation the
+- [x] Every citation is locatable in the document text under the same normalisation the
       citation check uses.
-- [ ] A question the document does not address returns the fixed response saying so,
+- [x] A question the document does not address returns the fixed response saying so,
       with no citations.
-- [ ] An answer with no citations is never rendered as though it were grounded.
-- [ ] Asking a second question produces an answer independent of the first. No prior
+- [x] An answer with no citations is never rendered as though it were grounded.
+- [x] Asking a second question produces an answer independent of the first. No prior
       question or answer is sent with it.
-- [ ] An answer never states whether a clause is enforceable, and never offers advice.
+- [x] An answer never states whether a clause is enforceable, and never offers advice.

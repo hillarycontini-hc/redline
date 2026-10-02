@@ -107,3 +107,52 @@ export interface ChatMessage {
 
 /** The only thing the analysis needs from the outside world. Stubbed in tests. */
 export type CallModel = (messages: ChatMessage[]) => Promise<string>;
+
+/**
+ * One sentence an answer leaned on. Verbatim from the document and locatable,
+ * or it does not exist — question-box answers inherit ADR 0001 exactly as
+ * flags do, because both are claims about the document.
+ */
+export interface Citation {
+  sourceSentence: string;
+  /** Character range of sourceSentence in the original document text. */
+  location: { start: number; end: number };
+}
+
+/** A quote the model offered that could not be placed in the document. */
+export interface DroppedCitation {
+  reason: "unlocatable-quote" | "malformed";
+  quote?: string;
+}
+
+/**
+ * What the question box returns. An empty citations list means one thing and
+ * only one thing: the answer is the fixed response saying the document does
+ * not address the question. There is no third state, so nothing above this can
+ * render an ungrounded answer as though it were grounded.
+ */
+export interface QuestionAnswer {
+  answer: string;
+  citations: Citation[];
+  /** Kept for logging and eval. Never rendered. */
+  dropped: DroppedCitation[];
+}
+
+/**
+ * What POST /api/ask sends back. Dropped quotes are counted, never sent: an
+ * unplaceable quote is the one thing the reader must not be shown.
+ */
+export interface AskResponse {
+  answer: string;
+  citations: Citation[];
+  droppedCount: number;
+}
+
+/** What the model is asked to return for a question. Grounded before it is shown. */
+export interface ModelAnswer {
+  /** False when the model itself says the document is silent on the question. */
+  addressed: boolean;
+  answer: string;
+  /** Quotes as the model gave them. Each is placed in the document, or dropped. */
+  citations: unknown[];
+}

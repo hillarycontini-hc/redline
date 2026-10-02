@@ -1,0 +1,118 @@
+CONTRACTOR SERVICES AGREEMENT
+
+This Contractor Services Agreement (the "Agreement") is made as of the Effective Date written on the signature page, between Northwind Systems LLC, a limited liability company (the "Client"), and the individual or entity named on the signature page (the "Contractor").
+
+1. SERVICES
+
+1.1 The Contractor will perform the design, development, and support services described in each statement of work signed by both parties (each, a "Statement of Work").
+
+1.2 The Client may change the scope, schedule, or acceptance criteria of any Statement of Work on written notice, and the Contractor will carry out the change at the rates already set out in that Statement of Work.
+
+1.3 The Contractor will supply its own equipment, software, and workspace, and will decide the manner and means by which the services are performed, subject to the deadlines in the applicable Statement of Work.
+
+1.4 A deliverable is treated as accepted when the Client confirms acceptance in writing. The Client will respond to each submitted deliverable within a reasonable period.
+
+2. FEES AND INVOICING
+
+2.1 The Client will pay the Contractor the fees set out in the applicable Statement of Work. Fees are exclusive of sales tax, which the Contractor will add where it applies.
+
+2.2 The Contractor will invoice monthly for services performed in the preceding month, in the format the Client specifies.
+
+2.3 The Client will pay each undisputed invoice within ninety (90) days of the date on which the Client's accounts department records the invoice as complete, and no interest, late fee, or other charge will accrue on any amount left outstanding.
+
+2.4 The Contractor bears its own taxes and its own costs of performance, including the cost of the equipment and software described in Section 1.3.
+
+3. TERM AND RENEWAL
+
+3.1 This Agreement starts on the Effective Date and runs for an initial term of twelve (12) months.
+
+3.2 This Agreement will renew automatically for successive twelve (12) month terms unless the Contractor delivers written notice of non-renewal no earlier than sixty (60) days and no later than forty-five (45) days before the end of the then-current term.
+
+3.3 The Client may decline to renew by written notice given at any point before the end of the then-current term.
+
+4. TERMINATION
+
+4.1 The Client may terminate this Agreement or any Statement of Work at any time, for any reason or for no reason, effective immediately on notice, and the Client will owe nothing for work that has been scheduled or started but not yet accepted.
+
+4.2 The Contractor may terminate this Agreement only on ninety (90) days of prior written notice, and only once every deliverable then outstanding has been delivered and accepted.
+
+4.3 Sections 5, 6, 7, 8, 9, and 11 survive the termination or expiry of this Agreement.
+
+5. OWNERSHIP OF WORK PRODUCT
+
+5.1 All work product, including drafts, source files, research notes, and preliminary concepts, becomes the sole and exclusive property of the Client at the moment it is created, whether or not the Client has paid any part of the fees for it.
+
+5.2 The Contractor assigns to the Client every right, title, and interest it holds in the work product, and will sign any document the Client reasonably asks for in order to record that assignment.
+
+5.3 The Contractor will not display, describe, or otherwise use the work product in a portfolio, case study, or marketing material without the Client's prior written consent.
+
+6. EXCLUSIVITY
+
+6.1 During the term of this Agreement and for twenty-four (24) months after it ends, the Contractor will not provide services of any kind to any business that offers products competing with the Client's products, anywhere in the world.
+
+6.2 The Contractor will tell the Client in writing, and in advance, about any engagement it proposes to accept from a third party during the term.
+
+7. INDEMNITY AND LIABILITY
+
+7.1 The Contractor will indemnify, defend, and hold harmless the Client and its officers, employees, and customers against any and all claims, losses, damages, and expenses of any kind arising out of the services, without limit as to amount and regardless of whether the Client contributed to the claim.
+
+7.2 The total liability of the Client to the Contractor under this Agreement is limited to the fees the Client actually paid in the three (3) months before the event the claim arises from.
+
+8. GUARANTEE
+
+8.1 If the Contractor is a company or a partnership, the individual who signs this Agreement personally guarantees every obligation of the Contractor under it, and that guarantee continues in full force even if the Contractor is dissolved, wound up, or becomes insolvent.
+
+8.2 The guarantee in Section 8.1 is a continuing guarantee, and no variation of this Agreement or of any Statement of Work releases or reduces it.
+
+9. CONFIDENTIALITY
+
+9.1 Each party will hold the other party's confidential information in confidence and will use it only as this Agreement requires.
+
+9.2 Confidential information does not include information that is already public, that the receiving party held before it was disclosed, or that the receiving party develops on its own.
+
+9.3 The obligations in this Section 9 continue for three (3) years after this Agreement ends.
+
+10. INDEPENDENT CONTRACTOR STATUS
+
+10.1 The Contractor is an independent contractor. Nothing in this Agreement creates a partnership, joint venture, agency, or employment relationship between the parties.
+
+10.2 The Contractor may use subcontractors with the Client's prior written consent, and stays responsible for their work.
+
+11. DISPUTE RESOLUTION
+
+11.1 Any dispute arising out of or relating to this Agreement will be resolved by final and binding arbitration before a single arbitrator seated in the county where the Client has its principal place of business, and the Contractor gives up any right to bring or join a class or collective action.
+
+11.2 Each party bears its own costs in the arbitration, and the award may be entered as a judgment in any court of competent jurisdiction.
+
+12. GOVERNING LAW
+
+12.1 This Agreement is governed by the laws of the State of Delaware, without regard to its conflict of laws rules.
+
+13. NOTICES
+
+13.1 A notice under this Agreement must be in writing and sent to the address on the signature page, by hand, by courier, or by email to the address each party nominates for that purpose.
+
+13.2 A notice is treated as given on delivery, or on the next business day if it arrives outside business hours.
+
+14. ENTIRE AGREEMENT
+
+14.1 This Agreement, together with every Statement of Work signed under it, is the whole of what the parties have agreed, and it replaces any earlier proposal, quotation, or understanding on the same subject.
+
+15. SEVERABILITY
+
+15.1 If a provision of this Agreement is held invalid, the rest of the Agreement stays in full force, and the provision held invalid is treated as modified to the least extent needed.
+
+16. COUNTERPARTS
+
+16.1 This Agreement may be signed in counterparts, including by electronic signature, and each counterpart is an original.
+
+16.2 A signed copy delivered by email has the same effect as a signed original.
+
+SIGNATURE PAGE
+
+Northwind Systems LLC                    The Contractor
+
+By: ______________________               By: ______________________
+Name:                                    Name:
+Title:                                   Title:
+Date:                                    Date:

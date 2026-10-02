@@ -1,0 +1,70 @@
+{
+  "filename": "adhesion-contract.txt",
+  "kind": "dangerous",
+  "summaryMustMention": [
+    "ninety days",
+    "no late fee",
+    "terminate at any time",
+    "non-compete",
+    "personal guarantee",
+    "arbitration"
+  ],
+  "plantedClauses": [
+    {
+      "clauseType": "slow-payment-no-late-fee",
+      "expectedSeverity": "Serious",
+      "sourceSentence": "The Client will pay each undisputed invoice within ninety (90) days of the date on which the Client's accounts department records the invoice as complete, and no interest, late fee, or other charge will accrue on any amount left outstanding.",
+      "consequence": "The Contractor waits up to ninety days from a date the Client controls, and gets nothing extra however late the money is.",
+      "counterOffer": "The Client will pay each undisputed invoice within thirty (30) days of the invoice date, and interest accrues on any overdue amount at 1.5% per month from the due date until the Client pays."
+    },
+    {
+      "clauseType": "auto-renewal",
+      "expectedSeverity": "Worth knowing",
+      "sourceSentence": "This Agreement will renew automatically for successive twelve (12) month terms unless the Contractor delivers written notice of non-renewal no earlier than sixty (60) days and no later than forty-five (45) days before the end of the then-current term.",
+      "consequence": "Another twelve months starts on its own unless the Contractor gives notice inside a fifteen-day window two months before the term ends.",
+      "counterOffer": null
+    },
+    {
+      "clauseType": "unilateral-termination",
+      "expectedSeverity": "Serious",
+      "sourceSentence": "The Client may terminate this Agreement or any Statement of Work at any time, for any reason or for no reason, effective immediately on notice, and the Client will owe nothing for work that has been scheduled or started but not yet accepted.",
+      "consequence": "The Client can end the work the same day and pay nothing for time the Contractor has already blocked out or already spent.",
+      "counterOffer": "Either party may terminate this Agreement or any Statement of Work on thirty (30) days of prior written notice, and on termination the Client will pay for every deliverable already accepted and, pro rata, for work in progress at the date notice takes effect."
+    },
+    {
+      "clauseType": "ip-before-payment",
+      "expectedSeverity": "Critical",
+      "sourceSentence": "All work product, including drafts, source files, research notes, and preliminary concepts, becomes the sole and exclusive property of the Client at the moment it is created, whether or not the Client has paid any part of the fees for it.",
+      "consequence": "The Client owns everything the Contractor makes from the moment it exists, so an unpaid Contractor has no work left to withhold.",
+      "counterOffer": "On receipt of full payment for a deliverable, the Contractor assigns to the Client all right, title, and interest in that deliverable, and the Contractor owns the work product until that payment is received in full."
+    },
+    {
+      "clauseType": "non-compete",
+      "expectedSeverity": "Serious",
+      "sourceSentence": "During the term of this Agreement and for twenty-four (24) months after it ends, the Contractor will not provide services of any kind to any business that offers products competing with the Client's products, anywhere in the world.",
+      "consequence": "For two years after the work ends, the Contractor is shut out of every client in the same market, in every country.",
+      "counterOffer": "During the term of this Agreement, the Contractor will not work on a project that competes directly with the deliverables described in a live Statement of Work, and after the term ends the Contractor is free to work for any client."
+    },
+    {
+      "clauseType": "uncapped-indemnity",
+      "expectedSeverity": "Critical",
+      "sourceSentence": "The Contractor will indemnify, defend, and hold harmless the Client and its officers, employees, and customers against any and all claims, losses, damages, and expenses of any kind arising out of the services, without limit as to amount and regardless of whether the Client contributed to the claim.",
+      "consequence": "The Contractor covers claims of any size connected to the work, including ones the Client helped cause, with no ceiling tied to what the job pays.",
+      "counterOffer": "Each party will indemnify the other against third party claims arising from its own breach of this Agreement, and the total liability of each party is capped at the total fees paid under the Statement of Work the claim relates to."
+    },
+    {
+      "clauseType": "personal-guarantee",
+      "expectedSeverity": "Critical",
+      "sourceSentence": "If the Contractor is a company or a partnership, the individual who signs this Agreement personally guarantees every obligation of the Contractor under it, and that guarantee continues in full force even if the Contractor is dissolved, wound up, or becomes insolvent.",
+      "consequence": "The person who signs is on the hook in their own name, and closing the company does not end it.",
+      "counterOffer": "The obligations under this Agreement are those of the Contractor entity alone, and no individual signing on its behalf gives a personal guarantee of any obligation under this Agreement."
+    },
+    {
+      "clauseType": "arbitration",
+      "expectedSeverity": "Worth knowing",
+      "sourceSentence": "Any dispute arising out of or relating to this Agreement will be resolved by final and binding arbitration before a single arbitrator seated in the county where the Client has its principal place of business, and the Contractor gives up any right to bring or join a class or collective action.",
+      "consequence": "A dispute goes to one arbitrator in the Client's home county rather than to court, and the Contractor cannot join a group claim.",
+      "counterOffer": null
+    }
+  ]
+}

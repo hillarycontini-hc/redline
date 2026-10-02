@@ -1,0 +1,12 @@
+{
+  "filename": "clean-agreement.txt",
+  "kind": "clean",
+  "summaryMustMention": [
+    "fourteen days",
+    "late fee",
+    "either party may terminate",
+    "ownership transfers on payment",
+    "liability is capped"
+  ],
+  "plantedClauses": []
+}

@@ -1,0 +1,11 @@
+# Default: let git normalise text in the repo and convert on checkout.
+* text=auto
+
+# Test data is bytes, not source. The citation check locates a quoted sentence
+# inside these files, so they must read identically on every machine and in CI.
+# Without this, a Windows checkout gets CRLF and Linux gets LF, and a quote that
+# spans a line break is a different string on each.
+tests/fixtures/*.txt   text eol=lf
+tests/fixtures/*.json  text eol=lf
+gold-set/**/*.txt      text eol=lf
+gold-set/**/*.json     text eol=lf

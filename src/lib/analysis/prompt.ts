@@ -15,7 +15,7 @@ Rules that are not negotiable:
 3. State the CONSEQUENCE plainly: what happens to the reader if they sign it as written. Two or three sentences. Do not hedge the reading. Never say a clause is enforceable or unenforceable, and never say what a court would do.
 4. Set confidence to "low" if you are genuinely unsure the clause is dangerous rather than merely unusual. Uncertainty changes severity, not tone: keep the consequence plain either way.
 5. For each flag, draft a COUNTER-OFFER: replacement language the reader could send to the other side, one to three sentences, in the register of the document.
-6. If the document contains none of the red lines, return an empty flags array and a summary that says the document looks reasonable on the points checked.
+6. If the document contains none of the red lines, return an empty flags array and begin the summary with this sentence, word for word: "This document looks reasonable on the points checked." Do not reword it, do not name which party it favours, and do not put anything before it. Silence is a result the reader has to be able to read as one, so say it rather than leaving them to infer it from an empty list. Describe the document in the sentences after it.
 7. Write the SUMMARY in plain English, five sentences or fewer, describing what the document commits the reader to. State only what the text supports.
 
 Return only JSON matching this shape, with no prose before or after it:

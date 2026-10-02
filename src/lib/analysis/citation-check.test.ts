@@ -2,46 +2,33 @@
  * The citation check. PRD §4.1, spec Testing Decisions, ADR 0001.
  *
  * For every document in gold-set/, every source sentence in its recorded
- * analysis must be locatable in the document text. One miss fails the build.
+ * reading must be locatable in the document text. One miss fails the build.
  *
- * Layout: gold-set/<name>/document.txt and gold-set/<name>/analysis.json,
- * where analysis.json is the model's raw response for that document. See
- * gold-set/README.md.
+ * The entries come through the gold-set loader, so an entry whose document
+ * lives in tests/fixtures/ is checked here too, against the one copy of that
+ * document in the repo. Layout and manifests: gold-set/README.md.
  */
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readdirSync, readFileSync, existsSync } from "node:fs";
-import { join } from "node:path";
 import { locate } from "./citation.ts";
-import { parseModelResponse } from "./analyze.ts";
+import { listGoldSet } from "../gold-set/entries.ts";
 
-const GOLD = join(process.cwd(), "gold-set");
-
-const entries = existsSync(GOLD)
-  ? readdirSync(GOLD, { withFileTypes: true })
-      .filter((d) => d.isDirectory())
-      .map((d) => d.name)
-  : [];
+const entries = listGoldSet();
 
 test("the gold set is not empty", () => {
   assert.ok(entries.length > 0, "gold-set/ has no documents");
 });
 
-for (const name of entries) {
-  test(`gold-set/${name}: every source sentence is verbatim in the document`, () => {
-    const dir = join(GOLD, name);
-    const document = readFileSync(join(dir, "document.txt"), "utf8");
-    const raw = readFileSync(join(dir, "analysis.json"), "utf8");
-    const analysis = parseModelResponse(raw);
-
-    const misses = analysis.flags
-      .filter((f) => locate(document, f.sourceSentence) === null)
+for (const entry of entries) {
+  test(`gold-set/${entry.name}: every source sentence is verbatim in the document`, () => {
+    const misses = entry.recorded.flags
+      .filter((f) => locate(entry.documentText, f.sourceSentence) === null)
       .map((f) => `[${f.clauseType}] ${JSON.stringify(f.sourceSentence)}`);
 
     assert.deepEqual(
       misses,
       [],
-      `${misses.length} source sentence(s) not found in ${name}/document.txt:\n  ${misses.join("\n  ")}`,
+      `${misses.length} source sentence(s) not found in ${entry.documentPath}:\n  ${misses.join("\n  ")}`,
     );
   });
 }

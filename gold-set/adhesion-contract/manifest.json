@@ -1,0 +1,6 @@
+{
+  "provenance": "synthetic",
+  "kind": "dangerous",
+  "fixture": "adhesion-contract.json",
+  "note": "The unit suite's one-sided fixture, with one planted clause of each of the eight clause types in PRD 5. The document and the planted clauses live in tests/fixtures/ and are read from there, so there is one copy of each in the repo. Planted by the build, not identified by a reviewer, so it does not count toward the ten."
+}

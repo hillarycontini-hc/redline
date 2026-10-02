@@ -1,0 +1,6 @@
+{
+  "provenance": "synthetic",
+  "kind": "clean",
+  "fixture": "clean-agreement.json",
+  "note": "The unit suite's fair agreement, with nothing planted. Read from tests/fixtures/ so there is one copy in the repo. Written by the build rather than found in the wild, so it does not count toward the five."
+}

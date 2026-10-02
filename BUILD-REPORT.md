@@ -283,3 +283,80 @@ explicitly, and all four binary fixtures were verified byte-identical across a f
 Worth knowing because it is the same class of problem as the LF pinning at the start of this run:
 **the thing that breaks a build like this is rarely the code, it is the bytes arriving different
 on the next machine.**
+
+---
+## A defect the release gate caught, and the fix
+
+**The gate earned its keep on its first live run.** It failed `clean-agreement` on the one
+condition that matters most for being believed: the summary did not say the document looks
+reasonable.
+
+`PRD.md` §4.4, spec decision D6 and `PRODUCT.md` principle 4 all require it. A reader who sees an
+empty flag list and a neutral description cannot tell "we found nothing" from "it did not work",
+and the research is explicit that the second reading is the one that loses trust silently.
+
+### What was actually wrong
+
+The analysis prompt had asked for this all along, as rule 6, in a single clause at the end of a
+seven-rule list. The model was dropping it. Measured over live readings of the fair fixture:
+
+| Prompt | Readings that said it |
+|---|---|
+| Original rule 6 | 0 of 2 |
+| Rule 6 made explicit — the sentence must come first | 5 of 7 |
+| Rule 6 demanding the exact sentence, word for word | **5 of 5** |
+
+The middle row is the interesting one. Every reading did open with a verdict, but two of seven
+phrased it as "this freelance agreement is **favorable to the contractor** on the points checked."
+
+### Why I did not widen the gate to accept that
+
+It would have been the easy fix and it would have been wrong. "Favourable to the contractor" reads
+as a pass only because the contractor happens to be the reader here. The same phrase shaped
+"favourable to the client" is the **opposite** verdict, and a gate that accepted both would pass a
+document it should fail. The phrase list in `gates.ts` is deliberately narrow, and it stays narrow.
+
+So the fix went into the prompt rather than the gate: rule 6 now names the exact sentence and
+tells the model not to reword it or say which party it favours.
+
+**`pnpm gates` now passes all three documents against the live model.** The run still exits
+non-zero, correctly, because the gold set holds no real documents — see below.
+
+### The durable fix, which is still yours to make
+
+Matching prose is a weak mechanism even when it works. If you want this to stop depending on
+wording, have the analysis return a structured verdict alongside the summary and let the gate read
+that. I did not do it: it changes the shape the analysis returns, and every screen and stored
+analysis downstream, which is more than a gate deserves to drive on its own.
+
+---
+
+## The gold set is the one thing this build could not supply
+
+`pnpm gates` runs, reports per document, and gates correctly. **It has nothing real to run
+against.**
+
+The target is ten real freelance agreements or leases with their dangerous clauses identified in
+advance, plus five clean documents. The set holds three synthetic documents and zero real ones. A
+synthetic document tests Redline against the imagination of whoever wrote it, not against how
+contracts are really drafted, so it proves the gates run — not that they were cleared.
+
+I did not invent documents, relabel the synthetic ones, or lower the target. Every entry declares
+its own provenance, synthetic never counts, and the runner prints the shortfall twice per run:
+
+```
+real documents   0 of 10 dangerous, 0 of 5 clean. 15 short of what a release needs (PRD 4.5).
+```
+
+A short set exits non-zero by design, and there is no flag to silence it. A release gate that
+printed "pass" against zero real documents would be the exact failure the ticket warns about.
+
+**This is why `pnpm gates` must stay out of CI for now** — it would fail every build. Put it in
+once the real documents land.
+
+### What I need from you
+
+Ten real agreements or leases, stripped of anything identifying a real party, with their dangerous
+clauses identified before Redline reads them. `gold-set/README.md` documents the layout and the
+manifest. Five fair ones matter just as much: the clean-document gate is the one that catches
+Redline becoming a tool that always finds something.

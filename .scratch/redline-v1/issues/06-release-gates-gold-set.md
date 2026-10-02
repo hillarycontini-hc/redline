@@ -15,15 +15,15 @@ ten, and each clean document inside its threshold.
 
 **Blocked by:** 02.
 
-**Status:** ready-for-agent
+**Status:** done, except the gold set itself, which needs ten real documents from the product owner (see BUILD-REPORT.md)
 
 - [ ] The gold set holds ten documents with dangerous clauses identified in advance and
       five clean documents, with nothing identifying a real party in any of them.
-- [ ] One command runs both release gates and reports a result per document.
-- [ ] The catches-what-matters gate fails when any Critical clause recorded for a
+- [x] One command runs both release gates and reports a result per document.
+- [x] The catches-what-matters gate fails when any Critical clause recorded for a
       document is missing from its analysis.
-- [ ] The clean-document gate fails when a clean document returns any Critical flag,
+- [x] The clean-document gate fails when a clean document returns any Critical flag,
       more than two flags of any tier, or a summary that does not say the document looks
       reasonable.
-- [ ] The synthetic fixture is replaced, or marked as not counting toward the ten.
-- [ ] The severity-defensible measure is reported and does not fail the run.
+- [x] The synthetic fixture is replaced, or marked as not counting toward the ten.
+- [x] The severity-defensible measure is reported and does not fail the run.

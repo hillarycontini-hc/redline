@@ -1,0 +1,14 @@
+{
+  "provenance": "synthetic",
+  "kind": "dangerous",
+  "note": "Written so the citation check had something to run against from day one. Nobody qualified identified these clauses, so it is not evidence for PRD 4.2 or 4.3 and does not count toward the ten. See expected.md.",
+  "identifiedClauses": [
+    { "clauseType": "ip-before-payment", "severity": "Critical" },
+    { "clauseType": "uncapped-indemnity", "severity": "Critical" },
+    { "clauseType": "non-compete", "severity": "Serious" },
+    { "clauseType": "slow-payment-no-late-fee", "severity": "Serious" },
+    { "clauseType": "unilateral-termination", "severity": "Serious" },
+    { "clauseType": "auto-renewal", "severity": "Worth knowing" },
+    { "clauseType": "arbitration", "severity": "Worth knowing" }
+  ]
+}

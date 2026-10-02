@@ -1,0 +1,59 @@
+{
+  "textPdf": "short-agreement.pdf",
+  "scannedPdf": "scanned-page.pdf",
+  "docx": "short-agreement.docx",
+  "sentences": [
+    "This Agreement begins on the date of signature and runs for twelve months.",
+    "It renews automatically for a further twelve months unless the Contractor gives notice at least ninety days before the end of the term.",
+    "The Client shall pay each invoice within sixty days of receipt, and no interest or late fee shall accrue on any unpaid amount.",
+    "All work product created under this Agreement vests in the Client on creation, whether or not the Contractor has been paid for it.",
+    "The Client may terminate this Agreement at any time on two days notice and shall owe nothing for work that was scheduled but not yet delivered.",
+    "The Contractor shall indemnify and hold the Client harmless against all claims, losses and costs of any kind arising from the services, without limit.",
+    "Any dispute arising under this Agreement shall be settled by binding arbitration in the county of the Client, and the Contractor waives any right to join a class action.",
+    "The Contractor confirms that they have read this Agreement in full and accept every clause in it as written."
+  ],
+  "plantedClauses": [
+    {
+      "clauseType": "ip-before-payment",
+      "expectedSeverity": "Critical",
+      "sourceSentence": "All work product created under this Agreement vests in the Client on creation, whether or not the Contractor has been paid for it.",
+      "consequence": "The Client owns the work the moment you make it, so withholding delivery over an unpaid invoice gains you nothing.",
+      "counterOffer": "Ownership of the work product passes to the Client on receipt of payment in full, and until then remains with the Contractor."
+    },
+    {
+      "clauseType": "uncapped-indemnity",
+      "expectedSeverity": "Critical",
+      "sourceSentence": "The Contractor shall indemnify and hold the Client harmless against all claims, losses and costs of any kind arising from the services, without limit.",
+      "consequence": "A claim against the Client becomes your bill, with no ceiling on what you could owe.",
+      "counterOffer": "The Contractor's total liability under this Agreement is limited to the fees paid in the twelve months before the claim."
+    },
+    {
+      "clauseType": "slow-payment-no-late-fee",
+      "expectedSeverity": "Serious",
+      "sourceSentence": "The Client shall pay each invoice within sixty days of receipt, and no interest or late fee shall accrue on any unpaid amount.",
+      "consequence": "You could wait two months to be paid, and late payment costs the Client nothing.",
+      "counterOffer": "Each invoice is payable within thirty days of receipt. Interest accrues on any overdue amount at 4% above base rate."
+    },
+    {
+      "clauseType": "unilateral-termination",
+      "expectedSeverity": "Serious",
+      "sourceSentence": "The Client may terminate this Agreement at any time on two days notice and shall owe nothing for work that was scheduled but not yet delivered.",
+      "consequence": "Work you have booked out and turned other jobs down for can be cancelled in two days, unpaid.",
+      "counterOffer": "Either party may terminate on thirty days written notice. The Client pays for work completed and for work scheduled within the notice period."
+    },
+    {
+      "clauseType": "auto-renewal",
+      "expectedSeverity": "Worth knowing",
+      "sourceSentence": "It renews automatically for a further twelve months unless the Contractor gives notice at least ninety days before the end of the term.",
+      "consequence": "Miss the ninety-day window and you are committed for another year.",
+      "counterOffer": null
+    },
+    {
+      "clauseType": "arbitration",
+      "expectedSeverity": "Worth knowing",
+      "sourceSentence": "Any dispute arising under this Agreement shall be settled by binding arbitration in the county of the Client, and the Contractor waives any right to join a class action.",
+      "consequence": "A dispute goes to arbitration where the Client is based, and you cannot join other people with the same complaint.",
+      "counterOffer": null
+    }
+  ]
+}

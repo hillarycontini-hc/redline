@@ -12,18 +12,21 @@ with no analysis produced.
 
 **Blocked by:** 02.
 
-**Gated on a decision:** approval of a browser parsing dependency. Ask before adding it.
+**Decision taken 2026-10-02:** two browser parsing dependencies approved, `pdfjs-dist`
+and `mammoth`. Both run in the browser, and `pdfjs-dist` reads a PDF's text layer with no
+path to character recognition to switch on by accident. Recorded as D3 in
+`BUILD-REPORT.md`. This ticket is no longer gated.
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] A text-bearing PDF and a DOCX each produce extracted text shown before analysis
+- [x] A text-bearing PDF and a DOCX each produce extracted text shown before analysis
       runs.
-- [ ] Flags on a document parsed from PDF show source sentences locatable in that
+- [x] Flags on a document parsed from PDF show source sentences locatable in that
       extracted text.
-- [ ] A PDF whose pages carry no extractable text is refused with a message saying
+- [x] A PDF whose pages carry no extractable text is refused with a message saying
       Redline cannot read it and why, and no analysis runs.
-- [ ] The file itself is never sent anywhere. Parsing happens in the browser and only
+- [x] The file itself is never sent anywhere. Parsing happens in the browser and only
       extracted text leaves it.
-- [ ] Any parsing dependency added runs in the browser, and approval was obtained before
+- [x] Any parsing dependency added runs in the browser, and approval was obtained before
       it was added.
-- [ ] No optical character recognition is added, and no code path attempts it.
+- [x] No optical character recognition is added, and no code path attempts it.

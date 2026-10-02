@@ -16,7 +16,11 @@ import type {
   Severity,
 } from "@/lib/analysis/types.ts";
 import { takeHandoff, type Handoff } from "@/lib/handoff.ts";
-import { checkUsable, extractText } from "@/lib/parse/extract.ts";
+import {
+  FILE_PICKER_ACCEPT,
+  checkUsable,
+  extractText,
+} from "@/lib/parse/extract.ts";
 import styles from "./read.module.css";
 
 /**
@@ -384,12 +388,12 @@ export function ReadingSurface() {
                 </button>
 
                 <label className={styles.fileLabel} htmlFor={`${fieldId}-file`}>
-                  or choose a plain text file
+                  or choose a PDF, a Word file or plain text
                 </label>
                 <input
                   id={`${fieldId}-file`}
                   type="file"
-                  accept=".txt,.md,.text,text/plain,text/markdown"
+                  accept={FILE_PICKER_ACCEPT}
                   className={styles.fileInput}
                   onChange={(event) => {
                     const file = event.target.files?.[0];

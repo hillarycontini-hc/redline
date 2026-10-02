@@ -4,7 +4,11 @@ import { useRouter } from "next/navigation";
 import { useId, useRef, useState } from "react";
 import styles from "./page.module.css";
 import { stashHandoff } from "@/lib/handoff.ts";
-import { checkUsable, extractText } from "@/lib/parse/extract.ts";
+import {
+  FILE_PICKER_ACCEPT,
+  checkUsable,
+  extractText,
+} from "@/lib/parse/extract.ts";
 
 /**
  * The one action: put a document in. The file is read in the browser and never
@@ -98,13 +102,13 @@ export function DocumentEntry() {
         </button>
 
         <label className={styles.fileLabel} htmlFor={`${fieldId}-file`}>
-          or drop a plain text file
+          or drop a PDF, a Word file or plain text
         </label>
         <input
           ref={fileRef}
           id={`${fieldId}-file`}
           type="file"
-          accept=".txt,.md,.text,text/plain,text/markdown"
+          accept={FILE_PICKER_ACCEPT}
           className={styles.fileInput}
           onChange={(event) => {
             const file = event.target.files?.[0];

@@ -69,7 +69,7 @@ export function checkRequest(
       ok: false,
       status: 400,
       message:
-        "No document text arrived. Paste the agreement or choose a plain text file, then try again.",
+        "No document text arrived. Paste the agreement or choose a file, then try again.",
     };
   }
 
@@ -78,7 +78,7 @@ export function checkRequest(
       ok: false,
       status: 400,
       message:
-        "The document text came through empty. Paste the agreement or choose a plain text file, then try again.",
+        "The document text came through empty. Paste the agreement or choose a file, then try again.",
     };
   }
 

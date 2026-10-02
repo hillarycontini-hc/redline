@@ -75,11 +75,13 @@ sentence in the reference column, its tier in the amount column, and the
 counter-offer that belongs to it, with the next line beginning beneath. The
 reader sees the mechanism before the fold, not a promise of it.
 
-Measured at 1440 x 872: the first entry's counter-offer ends at 864px, the
-second line begins at 880px. On a shorter viewport, around the 780 to 800px a
-1440 x 900 laptop leaves, the counter-offer falls below the fold. What the
-promise is about, the clause with its quoted sentence and its tier, clears
-there too.
+Measured at 1440 wide, after the colour and spacing pass of 2026-10-02: the
+first entry's counter-offer ends at 883px and the second line begins at 904px.
+The product owner asked for more whitespace and larger section names, which
+costs the counter-offer its place on a short first viewport; the clause with
+its quoted sentence and its tier still clears comfortably, and that is the part
+the promise is about. The trade was made deliberately and in that order:
+breathing room first, the counter-offer's position second.
 
 Amended 2026-10-02, after the first finish review scored this block partial. The
 block asked for two line items. One complete entry carrying its counter-offer

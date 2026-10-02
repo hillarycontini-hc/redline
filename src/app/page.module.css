@@ -31,8 +31,11 @@
   display: flex;
   align-items: baseline;
   gap: 0.75rem;
-  margin-bottom: 1rem;
-  color: var(--rule);
+  margin: calc(-1 * clamp(1.25rem, 3vw, 2.1rem))
+    calc(-1 * clamp(1.25rem, 3vw, 2.1rem)) 1.15rem;
+  padding: 0.6rem clamp(1.25rem, 3vw, 2.1rem);
+  background: var(--rule);
+  color: var(--sheet);
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.22em;
@@ -42,7 +45,7 @@
 .accountRule {
   flex: 1;
   height: 1px;
-  background: var(--rule-soft);
+  background: rgba(243, 246, 240, 0.5);
 }
 
 .hook {
@@ -51,7 +54,7 @@
 }
 
 .hookSub {
-  margin-top: 1rem;
+  margin-top: 0.8rem;
   max-width: 62ch;
   color: var(--ink-2);
   font-size: clamp(1rem, 1.25vw, 1.08rem);
@@ -63,7 +66,7 @@
 
 .entry {
   padding: clamp(1.25rem, 3vw, 2.1rem);
-  background: var(--sheet-sunk);
+  background: #e3ebdf;
   display: flex;
   flex-direction: column;
 }
@@ -208,12 +211,12 @@
 }
 
 .statementTitle {
-  font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+  font-size: clamp(1.7rem, 3vw, 2.45rem);
   max-width: 24ch;
 }
 
 .statementSub {
-  margin-top: 0.9rem;
+  margin-top: 0.8rem;
   max-width: 62ch;
   color: var(--ink-2);
   font-size: 0.95rem;
@@ -243,10 +246,11 @@
   font-family: var(--font-archivo-narrow), var(--font-archivo), sans-serif;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr) 8.5rem;
-  gap: 1.75rem;
+  gap: 2.25rem;
   margin-top: 1rem;
-  padding-bottom: 0.35rem;
+  padding-bottom: 0.45rem;
   border-bottom: 1px solid var(--rule);
+  background: linear-gradient(to left, var(--field-head) 0 9.5rem, transparent 9.5rem);
   color: var(--rule);
   font-size: 0.7rem;
   font-weight: 600;
@@ -266,10 +270,24 @@
   border-bottom: 1px solid var(--rule-hair);
 }
 
+/* The amount column is a field, washed per tier. The word and the rule still
+   carry the tier on their own: the wash is never the only cue. */
+.rowCritical {
+  background: linear-gradient(to left, var(--field-critical) 0 9.5rem, transparent 9.5rem);
+}
+
+.rowSerious {
+  background: linear-gradient(to left, var(--field-serious) 0 9.5rem, transparent 9.5rem);
+}
+
+.rowWorth {
+  background: linear-gradient(to left, var(--field-worth) 0 9.5rem, transparent 9.5rem);
+}
+
 .rowButton {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr) 8.5rem;
-  gap: 1.75rem;
+  gap: 2.25rem;
   width: 100%;
   align-items: start;
   padding: 1.15rem 0;
@@ -280,8 +298,11 @@
   transition: background 160ms var(--ease-out);
 }
 
-.rowButton:hover {
-  background: var(--sheet-sunk);
+.rowButton:hover [class*="clause"],
+.rowButton:hover .clause {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
 }
 
 .clause {
@@ -319,8 +340,8 @@
 }
 
 .tierSerious {
-  color: var(--ink);
-  border-bottom: 1px solid var(--ink);
+  color: var(--ochre);
+  border-bottom: 1px solid var(--ochre);
 }
 
 .tierWorth {
@@ -372,8 +393,8 @@
 }
 
 .counter {
-  margin: 0 0 0.95rem;
-  padding: 0.8rem 1rem;
+  margin: 0.35rem 0 1.25rem;
+  padding: 1rem 1.25rem;
   background: var(--sheet-sunk);
   border-left: 1px solid var(--carbon);
   max-width: 74ch;
@@ -421,23 +442,29 @@
   font-weight: 600;
 }
 
+/* Emphasis is only ever on the words that carry the fact. */
+.mark {
+  font-weight: 600;
+  color: var(--ink);
+}
+
 /* ---------------------------------------------------------------- notes */
 
 .notes {
-  padding: clamp(1.25rem, 3vw, 2.75rem);
+  padding: clamp(1.75rem, 4vw, 3.75rem) clamp(1.25rem, 3vw, 2.75rem);
   border-top: 3px double var(--rule);
   background: var(--sheet-sunk);
 }
 
 .notesTitle {
-  font-size: clamp(1.25rem, 2vw, 1.55rem);
+  font-size: clamp(1.55rem, 2.6vw, 2.1rem);
   max-width: 26ch;
 }
 
 .notesList {
-  margin-top: 1.4rem;
+  margin-top: 2rem;
   display: grid;
-  gap: 1rem;
+  gap: 1.5rem;
   max-width: 72ch;
   list-style: none;
 }
@@ -458,7 +485,7 @@
   align-items: baseline;
   justify-content: space-between;
   gap: 1rem;
-  padding: clamp(1.25rem, 3vw, 2.75rem);
+  padding: clamp(1.75rem, 4vw, 3.25rem) clamp(1.25rem, 3vw, 2.75rem);
   border-top: 1px solid var(--rule);
 }
 

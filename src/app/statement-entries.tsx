@@ -18,6 +18,13 @@ const TIER_CLASS: Record<Severity, string> = {
   "Worth knowing": styles.tierWorth,
 };
 
+/** The row's own field in the amount column, one wash per tier. */
+const ROW_CLASS: Record<Severity, string> = {
+  Critical: styles.rowCritical,
+  Serious: styles.rowSerious,
+  "Worth knowing": styles.rowWorth,
+};
+
 export function StatementEntries({ entries }: { entries: StatementEntry[] }) {
   const [openType, setOpenType] = useState<string | null>(
     entries[0]?.clauseType ?? null,
@@ -29,7 +36,10 @@ export function StatementEntries({ entries }: { entries: StatementEntry[] }) {
         const isOpen = entry.clauseType === openType;
 
         return (
-          <li className={styles.row} key={entry.clauseType}>
+          <li
+            className={`${styles.row} ${ROW_CLASS[entry.severity]}`}
+            key={entry.clauseType}
+          >
             <button
               type="button"
               className={styles.rowButton}

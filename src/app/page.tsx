@@ -23,10 +23,13 @@ export default function Home() {
 
             <p className={styles.hookSub}>
               Redline reads the agreement you have been handed and returns a
-              statement of what it costs you. Every line quotes the sentence it
-              came from, so you can find that sentence in your own copy and
-              check it. It reads contracts, leases, freelance agreements, and
-              terms of service, as text.
+              statement of what it costs you.{" "}
+              <strong className={styles.mark}>
+                Every line quotes the sentence it came from
+              </strong>
+              , so you can find that sentence in your own copy and check it. It
+              reads contracts, leases, freelance agreements, and terms of
+              service, as text.
             </p>
           </div>
 
@@ -40,9 +43,12 @@ export default function Home() {
                 A worked example, on a synthetic agreement.
               </h2>
               <p className={styles.statementSub}>
-                The document below was written for testing and belongs to no
-                one. Everything on this statement comes out of it, unedited.
-                Select any line to bring its sentence into alignment.
+                The document below was{" "}
+                <strong className={styles.mark}>written for testing</strong> and
+                belongs to no one. Everything on this statement comes out of it,
+                unedited.{" "}
+                <strong className={styles.mark}>Select any line</strong> to
+                bring its sentence into alignment.
               </p>
             </div>
 
@@ -78,20 +84,26 @@ export default function Home() {
           <h2 className={styles.notesTitle}>What this statement does not say.</h2>
           <ul className={styles.notesList}>
             <li className={styles.notesItem}>
-              Redline does not tell you whether to sign. It tells you what the
-              document says, and the decision stays yours.
+              Redline does not tell you{" "}
+              <strong className={styles.mark}>whether to sign</strong>. It tells
+              you what the document says, and the decision stays yours.
             </li>
             <li className={styles.notesItem}>
-              It does not tell you how a court would treat a clause. It flags
-              the clause for what it commits you to.
+              It does not tell you{" "}
+              <strong className={styles.mark}>how a court would treat</strong> a
+              clause. It flags the clause for what it commits you to.
             </li>
             <li className={styles.notesItem}>
-              If Redline cannot find a flag&rsquo;s sentence in your document,
-              it does not show the flag.
+              If Redline cannot find a flag&rsquo;s sentence in your document,{" "}
+              <strong className={styles.mark}>it does not show the flag</strong>
+              .
             </li>
             <li className={styles.notesItem}>
-              Redline reads text. It cannot read a photograph or an image of a
-              document, and it will not quote text it might have misread.
+              Redline reads text. It{" "}
+              <strong className={styles.mark}>
+                cannot read a photograph or an image
+              </strong>{" "}
+              of a document, and it will not quote text it might have misread.
             </li>
           </ul>
         </section>

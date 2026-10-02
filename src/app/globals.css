@@ -25,8 +25,17 @@
   --due: #b8261a;
   --due-soft: rgba(184, 38, 26, 0.12);
 
+  /* Ochre, the third ledger ink after red and black. Serious only. */
+  --ochre: #7a4e06;
+
   /* Carbon violet: copies, notes, and the things that are only worth knowing. */
   --carbon: #5b4a8a;
+
+  /* The amount column's field, one wash per tier. Never the only cue. */
+  --field-critical: rgba(184, 38, 26, 0.13);
+  --field-serious: rgba(138, 90, 7, 0.15);
+  --field-worth: rgba(91, 74, 138, 0.12);
+  --field-head: rgba(14, 92, 69, 0.12);
 
   --measure: 68ch;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);

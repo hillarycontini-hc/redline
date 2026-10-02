@@ -8,93 +8,283 @@
         "role": "primary",
         "displayName": "Ledger Green",
         "canonical": "#0e5c45",
-        "tonalRamp": ["#041a13", "#06281d", "#083a2b", "#0a4634", "#0e5c45", "#2a8468", "#73b8a0", "#c7e3d8"]
+        "tonalRamp": [
+          "#041a13",
+          "#06281d",
+          "#083a2b",
+          "#0a4634",
+          "#0e5c45",
+          "#2a8468",
+          "#73b8a0",
+          "#c7e3d8"
+        ]
       },
       "ledger-green-deep": {
         "role": "primary",
         "displayName": "Ledger Green Deep",
         "canonical": "#0a4634",
-        "tonalRamp": ["#03130e", "#051e16", "#072c20", "#0a4634", "#0d5a43", "#1f7b5e", "#6aae97", "#c2e0d4"]
+        "tonalRamp": [
+          "#03130e",
+          "#051e16",
+          "#072c20",
+          "#0a4634",
+          "#0d5a43",
+          "#1f7b5e",
+          "#6aae97",
+          "#c2e0d4"
+        ]
       },
       "rule-soft": {
         "role": "primary",
         "displayName": "Rule Soft",
         "canonical": "rgba(14, 92, 69, 0.22)",
-        "tonalRamp": ["rgba(14, 92, 69, 0.06)", "rgba(14, 92, 69, 0.12)", "rgba(14, 92, 69, 0.22)", "rgba(14, 92, 69, 0.35)", "rgba(14, 92, 69, 0.5)", "rgba(14, 92, 69, 0.65)", "rgba(14, 92, 69, 0.82)", "rgba(14, 92, 69, 1)"]
+        "tonalRamp": [
+          "rgba(14, 92, 69, 0.06)",
+          "rgba(14, 92, 69, 0.12)",
+          "rgba(14, 92, 69, 0.22)",
+          "rgba(14, 92, 69, 0.35)",
+          "rgba(14, 92, 69, 0.5)",
+          "rgba(14, 92, 69, 0.65)",
+          "rgba(14, 92, 69, 0.82)",
+          "rgba(14, 92, 69, 1)"
+        ]
       },
       "rule-hair": {
         "role": "primary",
         "displayName": "Rule Hair",
         "canonical": "rgba(14, 92, 69, 0.12)",
-        "tonalRamp": ["rgba(14, 92, 69, 0.04)", "rgba(14, 92, 69, 0.08)", "rgba(14, 92, 69, 0.12)", "rgba(14, 92, 69, 0.2)", "rgba(14, 92, 69, 0.3)", "rgba(14, 92, 69, 0.45)", "rgba(14, 92, 69, 0.7)", "rgba(14, 92, 69, 1)"]
+        "tonalRamp": [
+          "rgba(14, 92, 69, 0.04)",
+          "rgba(14, 92, 69, 0.08)",
+          "rgba(14, 92, 69, 0.12)",
+          "rgba(14, 92, 69, 0.2)",
+          "rgba(14, 92, 69, 0.3)",
+          "rgba(14, 92, 69, 0.45)",
+          "rgba(14, 92, 69, 0.7)",
+          "rgba(14, 92, 69, 1)"
+        ]
       },
       "due-red": {
         "role": "secondary",
         "displayName": "Due Red",
         "canonical": "#b8261a",
-        "tonalRamp": ["#290805", "#3d0c08", "#5c120c", "#7d1a11", "#9c2015", "#b8261a", "#d9594a", "#f2c3bc"]
+        "tonalRamp": [
+          "#290805",
+          "#3d0c08",
+          "#5c120c",
+          "#7d1a11",
+          "#9c2015",
+          "#b8261a",
+          "#d9594a",
+          "#f2c3bc"
+        ]
       },
       "due-red-wash": {
         "role": "secondary",
         "displayName": "Due Red Wash",
         "canonical": "rgba(184, 38, 26, 0.12)",
-        "tonalRamp": ["rgba(184, 38, 26, 0.04)", "rgba(184, 38, 26, 0.08)", "rgba(184, 38, 26, 0.12)", "rgba(184, 38, 26, 0.2)", "rgba(184, 38, 26, 0.32)", "rgba(184, 38, 26, 0.5)", "rgba(184, 38, 26, 0.75)", "rgba(184, 38, 26, 1)"]
+        "tonalRamp": [
+          "rgba(184, 38, 26, 0.04)",
+          "rgba(184, 38, 26, 0.08)",
+          "rgba(184, 38, 26, 0.12)",
+          "rgba(184, 38, 26, 0.2)",
+          "rgba(184, 38, 26, 0.32)",
+          "rgba(184, 38, 26, 0.5)",
+          "rgba(184, 38, 26, 0.75)",
+          "rgba(184, 38, 26, 1)"
+        ]
       },
       "carbon-violet": {
         "role": "tertiary",
         "displayName": "Carbon Violet",
         "canonical": "#5b4a8a",
-        "tonalRamp": ["#130f20", "#1d1733", "#2c2350", "#3d3268", "#4b3d78", "#5b4a8a", "#8a7bb3", "#d2cae4"]
+        "tonalRamp": [
+          "#130f20",
+          "#1d1733",
+          "#2c2350",
+          "#3d3268",
+          "#4b3d78",
+          "#5b4a8a",
+          "#8a7bb3",
+          "#d2cae4"
+        ]
       },
       "ledger-stock": {
         "role": "neutral",
         "displayName": "Ledger Stock",
         "canonical": "#d7e2d1",
-        "tonalRamp": ["#1b241a", "#2b3829", "#3f5140", "#5a6f59", "#7d9179", "#a6bba1", "#d7e2d1", "#eef3ec"]
+        "tonalRamp": [
+          "#1b241a",
+          "#2b3829",
+          "#3f5140",
+          "#5a6f59",
+          "#7d9179",
+          "#a6bba1",
+          "#d7e2d1",
+          "#eef3ec"
+        ]
       },
       "statement-sheet": {
         "role": "neutral",
         "displayName": "Statement Sheet",
         "canonical": "#f3f6f0",
-        "tonalRamp": ["#1e231c", "#2f362c", "#45503f", "#5f6c59", "#8a957f", "#b9c4b2", "#e3e9df", "#f3f6f0"]
+        "tonalRamp": [
+          "#1e231c",
+          "#2f362c",
+          "#45503f",
+          "#5f6c59",
+          "#8a957f",
+          "#b9c4b2",
+          "#e3e9df",
+          "#f3f6f0"
+        ]
       },
       "statement-sunk": {
         "role": "neutral",
         "displayName": "Statement Sunk",
         "canonical": "#e9efe5",
-        "tonalRamp": ["#1c211a", "#2c3329", "#424d3e", "#5c6957", "#86927e", "#b4c0ae", "#d9e1d4", "#e9efe5"]
+        "tonalRamp": [
+          "#1c211a",
+          "#2c3329",
+          "#424d3e",
+          "#5c6957",
+          "#86927e",
+          "#b4c0ae",
+          "#d9e1d4",
+          "#e9efe5"
+        ]
       },
       "ink": {
         "role": "neutral",
         "displayName": "Ink",
         "canonical": "#16181a",
-        "tonalRamp": ["#0a0b0c", "#16181a", "#24282a", "#363b3d", "#49514a", "#6e766f", "#a6ada6", "#dfe3df"]
+        "tonalRamp": [
+          "#0a0b0c",
+          "#16181a",
+          "#24282a",
+          "#363b3d",
+          "#49514a",
+          "#6e766f",
+          "#a6ada6",
+          "#dfe3df"
+        ]
       },
       "ink-2": {
         "role": "neutral",
         "displayName": "Ink Two",
         "canonical": "#49514a",
-        "tonalRamp": ["#121513", "#1d211e", "#2c322d", "#3a413b", "#49514a", "#6e776f", "#a4aea5", "#dde2dd"]
+        "tonalRamp": [
+          "#121513",
+          "#1d211e",
+          "#2c322d",
+          "#3a413b",
+          "#49514a",
+          "#6e776f",
+          "#a4aea5",
+          "#dde2dd"
+        ]
       },
       "ink-3": {
         "role": "neutral",
         "displayName": "Ink Three",
         "canonical": "#5a635a",
-        "tonalRamp": ["#161916", "#222622", "#333833", "#454c45", "#5a635a", "#7f887f", "#adb5ad", "#e0e4e0"]
+        "tonalRamp": [
+          "#161916",
+          "#222622",
+          "#333833",
+          "#454c45",
+          "#5a635a",
+          "#7f887f",
+          "#adb5ad",
+          "#e0e4e0"
+        ]
+      },
+      "ochre": {
+        "role": "secondary",
+        "displayName": "Ochre",
+        "canonical": "#7a4e06",
+        "note": "The third ledger ink after red and black. Serious tier word and rule only.",
+        "tonalRamp": [
+          "#190f01",
+          "#281902",
+          "#3f2804",
+          "#593905",
+          "#7a4e06",
+          "#a8751a",
+          "#d0a259",
+          "#edd9b2"
+        ]
+      },
+      "field-critical": {
+        "role": "surface",
+        "displayName": "Field Critical",
+        "canonical": "rgba(184, 38, 26, 0.13)",
+        "note": "Amount-column wash on Critical rows. Never the only cue: the word and its double rule still carry the tier."
+      },
+      "field-serious": {
+        "role": "surface",
+        "displayName": "Field Serious",
+        "canonical": "rgba(138, 90, 7, 0.15)",
+        "note": "Amount-column wash on Serious rows. Never the only cue."
+      },
+      "field-worth": {
+        "role": "surface",
+        "displayName": "Field Worth Knowing",
+        "canonical": "rgba(91, 74, 138, 0.12)",
+        "note": "Amount-column wash on Worth knowing rows. Never the only cue."
+      },
+      "field-head": {
+        "role": "surface",
+        "displayName": "Field Head",
+        "canonical": "rgba(14, 92, 69, 0.12)",
+        "note": "Amount-column wash behind the column-head row, where the field begins."
       }
     },
     "typographyMeta": {
-      "display": { "displayName": "Display", "purpose": "The hook in the account head, held to a 23ch measure. One per surface." },
-      "headline": { "displayName": "Headline", "purpose": "Section title inside the sheet, held to 24ch." },
-      "title": { "displayName": "Title", "purpose": "Minor band title, held to 26ch." },
-      "clause": { "displayName": "Clause", "purpose": "The line item's clause name: the only above-body weight inside a row." },
-      "body": { "displayName": "Body", "purpose": "Default prose in the product's own voice, with tabular figures." },
-      "body-secondary": { "displayName": "Body Secondary", "purpose": "Consequences, subcopy, notes, panel bodies, in Ink 2." },
-      "masthead": { "displayName": "Masthead", "purpose": "The account head line. Widest tracking in the system (0.22em)." },
-      "label": { "displayName": "Label", "purpose": "Column heads, panel heads, field heads. Archivo Narrow caps." },
-      "label-small": { "displayName": "Label Small", "purpose": "Counter-offer head and the per-row reference mark." },
-      "tier": { "displayName": "Tier", "purpose": "The three severity words in the amount column, and button text." },
-      "document": { "displayName": "Document", "purpose": "Every specimen of the reader's own document, via the global .docType class. Figures run proportional here." }
+      "display": {
+        "displayName": "Display",
+        "purpose": "The hook in the account head, held to a 23ch measure. One per surface."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section title inside the sheet, held to 24ch."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Minor band title, held to 26ch."
+      },
+      "clause": {
+        "displayName": "Clause",
+        "purpose": "The line item's clause name: the only above-body weight inside a row."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Default prose in the product's own voice, with tabular figures."
+      },
+      "body-secondary": {
+        "displayName": "Body Secondary",
+        "purpose": "Consequences, subcopy, notes, panel bodies, in Ink 2."
+      },
+      "masthead": {
+        "displayName": "Masthead",
+        "purpose": "The account head line. Widest tracking in the system (0.22em)."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Column heads, panel heads, field heads. Archivo Narrow caps."
+      },
+      "label-small": {
+        "displayName": "Label Small",
+        "purpose": "Counter-offer head and the per-row reference mark."
+      },
+      "tier": {
+        "displayName": "Tier",
+        "purpose": "The three severity words in the amount column, and button text."
+      },
+      "document": {
+        "displayName": "Document",
+        "purpose": "Every specimen of the reader's own document, via the global .docType class. Figures run proportional here."
+      }
     },
     "shadows": [
       {
@@ -104,16 +294,46 @@
       }
     ],
     "motion": [
-      { "name": "ease-out", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "The single easing in the system, exposed as --ease-out." },
-      { "name": "duration-row", "value": "160ms", "purpose": "Row hover fill." },
-      { "name": "duration-control", "value": "180ms", "purpose": "Button fill change." },
-      { "name": "duration-quote-rule", "value": "360ms", "purpose": "The due-red underline appearing beneath an open quote." },
-      { "name": "duration-alignment", "value": "420ms", "purpose": "The quoted sentence moving into alignment and taking full ink: the found-it state." },
-      { "name": "reduced-motion", "value": "0.001ms", "purpose": "All animation and transition duration under prefers-reduced-motion: reduce." }
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "The single easing in the system, exposed as --ease-out."
+      },
+      {
+        "name": "duration-row",
+        "value": "160ms",
+        "purpose": "Row hover fill."
+      },
+      {
+        "name": "duration-control",
+        "value": "180ms",
+        "purpose": "Button fill change."
+      },
+      {
+        "name": "duration-quote-rule",
+        "value": "360ms",
+        "purpose": "The due-red underline appearing beneath an open quote."
+      },
+      {
+        "name": "duration-alignment",
+        "value": "420ms",
+        "purpose": "The quoted sentence moving into alignment and taking full ink: the found-it state."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "0.001ms",
+        "purpose": "All animation and transition duration under prefers-reduced-motion: reduce."
+      }
     ],
     "breakpoints": [
-      { "name": "stack-head", "value": "62rem" },
-      { "name": "stack-row", "value": "40rem" }
+      {
+        "name": "stack-head",
+        "value": "62rem"
+      },
+      {
+        "name": "stack-row",
+        "value": "40rem"
+      }
     ]
   },
   "components": [
@@ -184,7 +404,7 @@
   ],
   "narrative": {
     "northStar": "Statement of Account",
-    "overview": "Redline is printed, not rendered. The world is the pale columnar green of a real accounting pad, ruled in ledger green, and every clause arrives as a line item on a statement: what you are agreeing to, the sentence it came from, and what tier it sits at. Structure is carried by rules and column alignment rather than by cards, chrome, or lift. The one sheet on the page is a sheet of paper, and the eye reads down it the way it reads down a bill.\n\nThe density is working density. The scene the build was made for is a kitchen table at eleven at night with twenty minutes of dense contract text ahead, which is why the ground is a tinted stock and never a lit white page. Colour is accounting colour: green owns structure, red is reserved for what a clause costs you and appears at Critical alone, carbon violet marks copies and the merely worth knowing. Nothing is centred; the head is asymmetric and the statement body runs the full measure beneath it.\n\nThe build refuses two arrangements by construction. There is no hero-metric template, because severity is three words and never a number. There is no headline-plus-shadowed-screenshot composition, because the mechanism itself — a complete first line item with its quoted sentence and its counter-offer — is what sits above the fold. No raster asset ships with this build, so the system carries no imagery vocabulary at all.",
+    "overview": "Redline is printed, not rendered. The world is the pale columnar green of a real accounting pad, ruled in ledger green, and every clause arrives as a line item on a statement: what you are agreeing to, the sentence it came from, and what tier it sits at. Structure is carried by rules and column alignment rather than by cards, chrome, or lift. The one sheet on the page is a sheet of paper, and the eye reads down it the way it reads down a bill.\n\nThe density is working density. The scene the build was made for is a kitchen table at eleven at night with twenty minutes of dense contract text ahead, which is why the ground is a tinted stock and never a lit white page. Colour is accounting colour: green owns structure, red is reserved for what a clause costs you and appears at Critical alone, carbon violet marks copies and the merely worth knowing. Nothing is centred; the head is asymmetric and the statement body runs the full measure beneath it.\n\nThe build refuses two arrangements by construction. There is no hero-metric template, because severity is three words and never a number. There is no headline-plus-shadowed-screenshot composition, because the mechanism itself \u2014 a complete first line item with its quoted sentence and its counter-offer \u2014 is what sits above the fold. No raster asset ships with this build, so the system carries no imagery vocabulary at all.",
     "keyCharacteristics": [
       "Ledger stock ground, never white and never cream.",
       "Ledger green owns every rule, column head, and frame.",
@@ -193,19 +413,71 @@
       "Three typefaces, each with one job."
     ],
     "rules": [
-      { "name": "The Never-White Rule", "body": "No surface in this world is #fff or cream. The ground is tinted stock, the sheet is a lighter tint of the same stock, and the recessed register is a darker one. Three tints, one hue family.", "section": "colors" },
-      { "name": "The Cost Rule", "body": "Red is reserved for what a clause costs the reader. It appears on the Critical tier, on an open quote's underline, on error, and on the caret — nowhere else. It is never used for emphasis, decoration, or a second accent.", "section": "colors" },
-      { "name": "The Tinted Ink Rule", "body": "Secondary and tertiary ink are tinted from the ground's hue. Neutral gray does not appear in this palette.", "section": "colors" },
-      { "name": "The Three Voices Rule", "body": "Archivo is the product speaking. Archivo Narrow carries every uppercase role — masthead, column heads, tier words, panel heads, buttons, the statement foot. Tinos carries every specimen of the reader's document: the quoted source sentence, the counter-offer body, the pasted-text preview, and the entry field itself. A typeface never crosses into another's job.", "section": "typography" },
-      { "name": "The .docType Rule", "body": "Any text that is or quotes the reader's document carries the global .docType class, which switches to Tinos and turns tabular figures off. New surfaces add the class; they do not re-declare the serif.", "section": "typography" },
-      { "name": "The Tabular Figures Rule", "body": "font-variant-numeric: tabular-nums is set on body, so every count and figure in the product's own voice aligns in a column. .docType is the only place figures run proportional, because the document is quoted as it was set.", "section": "typography" },
-      { "name": "The No-Number-Severity Rule", "body": "Severity is rendered as one of three words and never as a numeral, a bar, a meter, or a percentage. There is no type role for a score because no score exists.", "section": "typography" },
-      { "name": "The Shared Grid Rule", "body": "The column head row and the line item are one grid definition used twice. A new column cannot be added to one without the other, and alignment between them is never faked with padding.", "section": "layout" },
-      { "name": "The Nothing-Centred Rule", "body": "The sheet is centred in the viewport; no content inside it is. Headings, panels, and prose are left-aligned on an asymmetric grid.", "section": "layout" },
-      { "name": "The Stack Names Itself Rule", "body": "Below 40rem the column head row is removed, because each stacked line carries its own field name. A stacked row never relies on a head that is no longer on screen.", "section": "layout" },
-      { "name": "The One Sheet Rule", "body": "Exactly one element in a surface may carry elevation: the statement sheet. Rows, panels, buttons, and fields are flat and stay flat in every state.", "section": "elevation" },
-      { "name": "The Rule-Weight Rule", "body": "Depth and hierarchy are spent in border weight, not shadow. Four weights exist: 3px double green closes an account section; 1px solid green divides a head from its body; 1px soft green frames a surface; 1px hair green separates rows.", "section": "elevation" },
-      { "name": "The Square Rule", "body": "No radius on any page element. A rounded corner reads as software and this world is printed.", "section": "shapes" }
+      {
+        "name": "The Never-White Rule",
+        "body": "No surface in this world is #fff or cream. The ground is tinted stock, the sheet is a lighter tint of the same stock, and the recessed register is a darker one. Three tints, one hue family.",
+        "section": "colors"
+      },
+      {
+        "name": "The Cost Rule",
+        "body": "Red is reserved for what a clause costs the reader. It appears on the Critical tier, on an open quote's underline, on error, and on the caret \u2014 nowhere else. It is never used for emphasis, decoration, or a second accent.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tinted Ink Rule",
+        "body": "Secondary and tertiary ink are tinted from the ground's hue. Neutral gray does not appear in this palette.",
+        "section": "colors"
+      },
+      {
+        "name": "The Three Voices Rule",
+        "body": "Archivo is the product speaking. Archivo Narrow carries every uppercase role \u2014 masthead, column heads, tier words, panel heads, buttons, the statement foot. Tinos carries every specimen of the reader's document: the quoted source sentence, the counter-offer body, the pasted-text preview, and the entry field itself. A typeface never crosses into another's job.",
+        "section": "typography"
+      },
+      {
+        "name": "The .docType Rule",
+        "body": "Any text that is or quotes the reader's document carries the global .docType class, which switches to Tinos and turns tabular figures off. New surfaces add the class; they do not re-declare the serif.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Figures Rule",
+        "body": "font-variant-numeric: tabular-nums is set on body, so every count and figure in the product's own voice aligns in a column. .docType is the only place figures run proportional, because the document is quoted as it was set.",
+        "section": "typography"
+      },
+      {
+        "name": "The No-Number-Severity Rule",
+        "body": "Severity is rendered as one of three words and never as a numeral, a bar, a meter, or a percentage. There is no type role for a score because no score exists.",
+        "section": "typography"
+      },
+      {
+        "name": "The Shared Grid Rule",
+        "body": "The column head row and the line item are one grid definition used twice. A new column cannot be added to one without the other, and alignment between them is never faked with padding.",
+        "section": "layout"
+      },
+      {
+        "name": "The Nothing-Centred Rule",
+        "body": "The sheet is centred in the viewport; no content inside it is. Headings, panels, and prose are left-aligned on an asymmetric grid.",
+        "section": "layout"
+      },
+      {
+        "name": "The Stack Names Itself Rule",
+        "body": "Below 40rem the column head row is removed, because each stacked line carries its own field name. A stacked row never relies on a head that is no longer on screen.",
+        "section": "layout"
+      },
+      {
+        "name": "The One Sheet Rule",
+        "body": "Exactly one element in a surface may carry elevation: the statement sheet. Rows, panels, buttons, and fields are flat and stay flat in every state.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Rule-Weight Rule",
+        "body": "Depth and hierarchy are spent in border weight, not shadow. Four weights exist: 3px double green closes an account section; 1px solid green divides a head from its body; 1px soft green frames a surface; 1px hair green separates rows.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Square Rule",
+        "body": "No radius on any page element. A rounded corner reads as software and this world is printed.",
+        "section": "shapes"
+      }
     ],
     "dos": [
       "Do build structure from ledger-green rules at the four established weights (3px double, 1px solid, 1px soft, 1px hair) and from column alignment.",

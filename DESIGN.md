@@ -24,13 +24,13 @@ typography:
     letterSpacing: "-0.03em"
   headline:
     fontFamily: "Archivo, system-ui, sans-serif"
-    fontSize: "clamp(1.4rem, 2.4vw, 1.9rem)"
+    fontSize: "clamp(1.7rem, 3vw, 2.45rem)"
     fontWeight: 800
     lineHeight: 1.04
     letterSpacing: "-0.03em"
   title:
     fontFamily: "Archivo, system-ui, sans-serif"
-    fontSize: "clamp(1.25rem, 2vw, 1.55rem)"
+    fontSize: "clamp(1.55rem, 2.6vw, 2.1rem)"
     fontWeight: 800
     lineHeight: 1.04
     letterSpacing: "-0.03em"
@@ -197,6 +197,22 @@ ground, and two reserved accents that each mean one thing.
   caret in every field. `colors.due-red-wash` at 12% fills the entry field while
   a file is being dragged onto it.
 
+- **Ochre** (`colors.ochre`): The third ledger ink, after red and black. It
+  carries the Serious tier word and its single rule, and nothing else. Added
+  2026-10-02 so the three tiers read as a ladder rather than as red, black, and
+  violet: Serious previously used plain ink, which made the middle tier the
+  weakest signal on the page.
+
+### Amount-column fields
+- **Field Critical / Serious / Worth** (`colors.field-critical`,
+  `colors.field-serious`, `colors.field-worth`): The due red, ochre, and carbon
+  violet at 13%, 15%, and 12%, washing the right 9.5rem of each statement row so
+  the amount column reads as a field down the page. **The wash is never the only
+  cue.** Every tier still carries its word and its own rule, so the colour can be
+  removed without losing the tier.
+- **Field Head** (`colors.field-head`): Ledger green at 12%, washing the same
+  9.5rem behind the column-head row so the field starts at its heading.
+
 ### Tertiary
 - **Carbon Violet** (`colors.carbon-violet`): The carbon-copy colour. It carries
   the Worth-knowing tier word and its dotted rule, and the counter-offer panel's
@@ -245,9 +261,9 @@ paper, not ours."
 ### Hierarchy
 - **Display** (800, `clamp(2.05rem, 5vw, 3.35rem)`, 1.04, `-0.03em`): The hook in
   the account head, held to a 23ch measure.
-- **Headline** (800, `clamp(1.4rem, 2.4vw, 1.9rem)`, 1.04): The statement
+- **Headline** (800, `clamp(1.7rem, 3vw, 2.45rem)`, 1.04): The statement
   section title, held to 24ch.
-- **Title** (800, `clamp(1.25rem, 2vw, 1.55rem)`, 1.04): The notes band title,
+- **Title** (800, `clamp(1.55rem, 2.6vw, 2.1rem)`, 1.04): The notes band title,
   held to 26ch.
 - **Clause** (600, 1.08rem, `-0.01em`): The line item's clause name — the one
   thing in a row that sits above body weight.

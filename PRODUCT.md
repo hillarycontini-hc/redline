@@ -86,9 +86,11 @@ red lines, and any judgment about which clauses are worth fighting for. OCR is
 excluded on principle, not cost: a citation into misread text is worse than none
 because it looks verifiable.
 
-**Explicitly undecided — do not invent these:** pricing and packaging; which
-OpenRouter model; and whether the question box may answer from the summary or only
-from the document's own text.
+**Explicitly undecided — do not invent these:** pricing and packaging; and whether
+the question box may answer from the summary or only from the document's own text.
+
+The OpenRouter model was decided on 2026-10-02: `z-ai/glm-5.3-flash`, carried in
+`OPENROUTER_MODEL` and never hardcoded.
 
 ## Brand Commitments
 

@@ -17,8 +17,9 @@ their source sentences.
 
 **Blocked by:** 01.
 
-**Gated on a decision:** which OpenRouter model. Needed before the first analysis call
-runs. The model id is read from the environment and is never hardcoded.
+**Decision taken 2026-10-02:** the model is `z-ai/glm-5.3-flash`, set as
+`OPENROUTER_MODEL`. The id is read from the environment and is never hardcoded.
+This ticket is no longer gated.
 
 **Status:** ready-for-agent
 

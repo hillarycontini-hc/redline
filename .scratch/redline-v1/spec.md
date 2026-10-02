@@ -265,7 +265,10 @@ recommended," which settles the following:
 
 **Still open.**
 
-- Which OpenRouter model. Product owner. Needed before the first analysis call is written.
+- ~~Which OpenRouter model.~~ Decided 2026-10-02 by the product owner:
+  `z-ai/glm-5.3-flash`. It is set in `.env.local` as `OPENROUTER_MODEL` and read
+  from the environment; it is never hardcoded, so changing it is a config change
+  rather than a code change.
 - Whether the question box may answer from the summary or only from the source text.
   Recommendation: source text only, or citations become circular.
 - Whether to publish this spec as a GitHub issue. The repo is public and no tracker or triage

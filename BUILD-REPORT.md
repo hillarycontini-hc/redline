@@ -32,8 +32,8 @@ corepack pnpm run smoke        # fixture contract through the real pipeline
 | 05 | PDF and DOCX, with a clear refusal for scanned PDFs | **done**, verified in the browser against a real PDF |
 | 06 | Release gates run against a full gold set | **mechanism done**; the gold set needs real documents from you |
 | 07 | Sign in and see your library | **built**; sign-up and RLS need your project to demonstrate |
-| 08 | Analyses save and reopen | in progress |
-| 09 | Editable red lines drive the analysis | not started |
+| 08 | Analyses save and reopen | **built**; saving, listing and deleting need your project to demonstrate |
+| 09 | Editable red lines drive the analysis | in progress |
 
 ---
 

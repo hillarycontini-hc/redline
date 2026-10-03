@@ -1,11 +1,25 @@
 # Build report — Redline v1
 
-**Run started 2026-10-02.** Orchestrated build of `.scratch/redline-v1/spec.md` and the nine
-tickets beside it, run unattended. This file is the record of what was built, what was decided
-in the product owner's absence, and what could not be verified.
+**All nine tickets are built. 190 tests pass, the build is clean, and the fixture contract goes
+through the real model end to end with 8 of 8 source sentences verified.**
 
-Status is rewritten as the run proceeds. If the run died, the ticket Status lines in
-`.scratch/redline-v1/issues/` are authoritative.
+**Four things need you**, in the order I would do them: run the Supabase migrations, supply ten
+real gold-set documents, switch on branch protection, and look at the desktop layout once.
+
+---
+
+## The four things that need you
+
+| | What | Why it is yours | Where |
+|---|---|---|---|
+| 1 | **Run the Supabase migrations** | No project exists. Nine criteria across tickets 07–09 cannot be demonstrated without one. | `supabase/migrations/README.md` |
+| 2 | **Ten real gold-set documents** | A synthetic document tests Redline against whoever wrote it. `pnpm gates` exits non-zero until they arrive, by design. | `gold-set/README.md` |
+| 3 | **Switch on branch protection** | A repo setting, not code. My attempt was blocked, correctly, for an unattended build. | one `gh` command, below |
+| 4 | **Look at `/read` at desktop width** | Chrome would not resize on this machine, so I verified the layout at 390px and 500px only. | 30 seconds |
+
+[CONFIRM] One open question I could not answer: **is email confirmation on for the Supabase
+project?** If it is, sign-up ends on "open the link we emailed you" rather than landing in the
+library. The code handles both; which one a reader meets is a project setting.
 
 ---
 
@@ -13,10 +27,15 @@ Status is rewritten as the run proceeds. If the run died, the ticket Status line
 
 ```
 corepack pnpm install          # pnpm is not on PATH; see decision D1
-corepack pnpm run typecheck
-corepack pnpm test
+corepack pnpm test             # 190 tests
 corepack pnpm run build
-corepack pnpm run smoke        # fixture contract through the real pipeline
+corepack pnpm run smoke        # the fixture contract through the real model
+```
+
+Then, once the Supabase project exists:
+
+```
+corepack pnpm verify:rls       # proves no account can read another's rows
 ```
 
 ---
@@ -29,11 +48,29 @@ corepack pnpm run smoke        # fixture contract through the real pipeline
 | 02 | Analyse a plain-text document and show cited flags | **done**, verified against the live model |
 | 03 | Open a flag and see what it owes you | **done**, verified against the live model |
 | 04 | Question box | **done**, verified against the live model |
-| 05 | PDF and DOCX, with a clear refusal for scanned PDFs | **done**, verified in the browser against a real PDF |
-| 06 | Release gates run against a full gold set | **mechanism done**; the gold set needs real documents from you |
-| 07 | Sign in and see your library | **built**; sign-up and RLS need your project to demonstrate |
-| 08 | Analyses save and reopen | **built**; saving, listing and deleting need your project to demonstrate |
-| 09 | Editable red lines drive the analysis | in progress |
+| 05 | PDF and DOCX, with a clear refusal for scanned PDFs | **done**, verified in a browser on a real PDF |
+| 06 | Release gates run against a full gold set | **mechanism done**; the set needs real documents |
+| 07 | Sign in and see your library | **built**; sign-up and RLS need your project |
+| 08 | Analyses save and reopen | **built**; saving, listing, deleting need your project |
+| 09 | Editable red lines drive the analysis | **built**; the demo needs your project |
+
+Nothing was blocked twice. Nothing was abandoned.
+
+---
+
+## The invariant, end to end
+
+ADR 0001 says a flag whose source sentence cannot be shown is a bug. Four things now enforce it,
+at four different depths:
+
+1. **The seam** drops an unlocatable flag before anything sees it, and records the refusal.
+2. **CI** fails the build if a recorded source sentence is not in its document, naming the quote.
+3. **Storage** re-checks every flag's range on the way in and on the way out, so a citation cannot
+   stop being checkable by being saved.
+4. **`pnpm smoke`** exits non-zero if a live reading cites a sentence that is not there.
+
+Latest live run: **8 planted, 8 caught, 8 of 8 verified, 0 refused**, and both question-box answers
+quoting real sentences.
 
 ---
 
@@ -418,3 +455,78 @@ the very thing it is checking.
 **Is email confirmation on for the project?** If it is, sign-up ends on "open the link we emailed
 you" rather than landing in the library, and ticket 07's demo reads differently. The code handles
 both; which one a reader meets is a project setting, and it is yours.
+
+---
+
+## Ticket 09 — what the last ticket did
+
+The screen is at `/red-lines`, reached from the account head. A signed-in reader is read against
+their own list; everyone else against the seeded one. The list is read on the server, because a
+list posted back from the browser is hearsay and this one decides what the reader is shown.
+
+Three tests prove it against the fixture: arbitration promoted comes back **Critical carrying
+wording to send**, auto-renewal removed comes back **not at all**, and an added entry flags at the
+tier it was given.
+
+**A drift guard I added that was not asked for in those words.** The seeded list existed twice —
+once in TypeScript, once in the SQL that seeds a new account — with nothing holding them together.
+A new account would have quietly got a list disagreeing with the code. A test now parses the
+migration and holds it to the code on count, clause type, tier, and every word of every entry. I
+verified it bites by changing one tier in the SQL and watching it fail by name.
+
+---
+
+## What I could not verify, gathered in one place
+
+Nine criteria across three tickets need a running Supabase project. **I wrote no test double and
+presented it as verification anywhere.** Where a criterion needed a database, it is unticked.
+
+| Ticket | Criterion | Needs |
+|---|---|---|
+| 07 | Sign up, sign out, sign back in; session survives reload | a project |
+| 07 | A read for another user's row returns nothing | a project — `pnpm verify:rls` settles it |
+| 08 | Saving, listing, deleting a document | a project |
+| 09 | A new account is seeded; edits survive signing out | a project |
+| 06 | Ten real dangerous documents, five clean | real documents from you |
+
+Everything that could be pulled below the database line **is** tested for real: serialisation,
+validation, the gate, the id check, the round trip, and the import-graph walk proving a reopened
+reading cannot reach the model.
+
+Two things about the desktop layout and the provider rate limit are covered in their own sections
+above.
+
+---
+
+## Branch protection, the exact command
+
+```bash
+gh api -X PUT repos/hillarycontini-hc/redline/branches/master/protection \
+  -H "Accept: application/vnd.github+json" \
+  -f 'required_status_checks[strict]=false' \
+  -f 'required_status_checks[contexts][]=Gates' \
+  -F 'enforce_admins=false' \
+  -F 'required_pull_request_reviews=null' \
+  -F 'restrictions=null'
+```
+
+Or: **Settings → Branches → Add branch ruleset** on `master`, tick **Require status checks**, add
+**`Gates`**.
+
+**Do not add `pnpm gates` to CI yet.** It exits non-zero by design while the gold set holds no real
+documents, so it would fail every build. Add it once they land.
+
+---
+
+## Three things I would look at next, none of them built
+
+I stopped at the ticket boundary rather than deciding these for you.
+
+1. **One automatic retry on a model parse failure.** The reader currently sees "the reading did not
+   come back in one piece" and retries by hand. Retrying costs money, so it is your call.
+2. **A bring-your-own-key Fireworks integration.** The shared pool rate-limited me repeatedly, and
+   with `allow_fallbacks: false` there is no second provider to absorb it. This moves the limits to
+   your account.
+3. **A structured verdict instead of matching prose.** The clean-document gate reads the summary
+   for a sentence. Having the analysis return the verdict as a field would be sturdier, but it
+   changes the shape every screen and every stored reading depends on.

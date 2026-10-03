@@ -13,15 +13,15 @@ Delete the auto-renewal red line, re-analyse, and see no auto-renewal flag.
 
 **Blocked by:** 08.
 
-**Status:** ready-for-agent
+**Status:** built; the demo needs a running Supabase project (see BUILD-REPORT.md)
 
 - [ ] A new account's red lines are seeded with the default list, and that list is
       visible and editable.
-- [ ] Promoting arbitration to Critical and re-analysing a document containing an
+- [x] Promoting arbitration to Critical and re-analysing a document containing an
       arbitration clause returns that flag as Critical, carrying a counter-offer.
-- [ ] Deleting the auto-renewal red line and re-analysing a document containing an
+- [x] Deleting the auto-renewal red line and re-analysing a document containing an
       auto-renewal clause returns no auto-renewal flag.
-- [ ] A red line the reader adds, at the tier they chose, produces flags at that tier.
-- [ ] The same list applies to every document type. Leases and terms of service get no
+- [x] A red line the reader adds, at the tier they chose, produces flags at that tier.
+- [x] The same list applies to every document type. Leases and terms of service get no
       separate list.
 - [ ] Edits survive signing out and back in, and apply to every later analysis.

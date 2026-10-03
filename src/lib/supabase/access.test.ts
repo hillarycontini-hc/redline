@@ -16,9 +16,11 @@ import assert from "node:assert/strict";
 import {
   LIBRARY_PATH,
   READ_PATH,
+  RED_LINES_PATH,
   SIGN_IN_PATH,
   gateKeeping,
   gateLibrary,
+  gateRedLines,
   onwardPath,
   savedReadingPath,
   signInPathFor,
@@ -79,6 +81,43 @@ test("no viewer state gets the library without an account id attached", () => {
       `${viewer.state} must not reach the library`,
     );
   }
+});
+
+test("only a signed-in viewer gets the red lines, and nobody else's list", () => {
+  const signedIn = gateRedLines({
+    state: "signed-in",
+    userId: "a2c1f0de-0000-4000-8000-000000000001",
+    email: "freelancer@example.com",
+  });
+
+  assert.equal(signedIn.show, "red-lines");
+  if (signedIn.show !== "red-lines") throw new Error("unreachable");
+  assert.equal(signedIn.userId, "a2c1f0de-0000-4000-8000-000000000001");
+
+  // It matters more here than on the library. This list decides what every
+  // later reading shows, so a viewer who reached it without an account could
+  // decide what somebody else is told about their own contract.
+  for (const viewer of [
+    { state: "signed-out" },
+    { state: "no-accounts", missing: [] },
+  ] as Viewer[]) {
+    assert.notEqual(
+      gateRedLines(viewer).show,
+      "red-lines",
+      `${viewer.state} must not reach a list of red lines`,
+    );
+  }
+});
+
+test("a signed-out viewer is sent to sign in and comes back to their red lines", () => {
+  const gate = gateRedLines({ state: "signed-out" });
+
+  assert.equal(gate.show, "sign-in-first");
+  if (gate.show !== "sign-in-first") throw new Error("unreachable");
+  assert.ok(gate.goTo.startsWith(SIGN_IN_PATH));
+
+  const next = new URLSearchParams(gate.goTo.split("?")[1]).get("next");
+  assert.equal(next, RED_LINES_PATH);
 });
 
 test("a path on this site is honoured after signing in", () => {

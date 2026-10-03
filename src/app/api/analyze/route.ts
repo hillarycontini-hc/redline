@@ -1,14 +1,19 @@
 import { analyze } from "@/lib/analysis/analyze.ts";
-import { SEED_RED_LINES } from "@/lib/analysis/red-lines.ts";
-import type { Analysis, AnalyzeResponse, SavedTo } from "@/lib/analysis/types.ts";
+import type {
+  Analysis,
+  AnalyzeResponse,
+  RedLine,
+  SavedTo,
+} from "@/lib/analysis/types.ts";
 import {
   ConfigError,
   UpstreamBusyError,
   openRouterCaller,
 } from "@/lib/openrouter.ts";
 import { gateKeeping } from "@/lib/supabase/access.ts";
+import { redLinesFor } from "@/lib/supabase/red-lines.ts";
 import { saveReading } from "@/lib/supabase/saved-reading.ts";
-import { readSession } from "@/lib/supabase/server.ts";
+import { readSession, type Session } from "@/lib/supabase/server.ts";
 import { MALFORMED_JSON, checkRequest, isJsonRequest } from "./validate.ts";
 
 /**
@@ -20,14 +25,18 @@ import { MALFORMED_JSON, checkRequest, isJsonRequest } from "./validate.ts";
  * travels (CLAUDE.md). A request arriving as any other content type is refused
  * before the body is touched.
  *
+ * The red lines the reading runs against are read here too, on the server,
+ * from the account's own rows. They are never taken from the request: this list
+ * decides which clause types are flagged and at what tier, so a list posted up
+ * from the browser would let the caller choose what the reader is told about
+ * their own contract. A signed-in reader is read against their own list; anyone
+ * else against the seeded one, which is a working list and not a placeholder.
+ *
  * This is also where a reading is kept, when there is an account to keep it in.
  * It is kept here rather than by a later call from the browser because this is
  * the only place that knows which red lines the reading actually ran against.
  * A list sent back up afterwards would be hearsay, and the red lines in force
  * are the one part of a saved reading that cannot be reconstructed later.
- *
- * Phase 1 reads against the seeded red lines. Ticket 09 makes the list the
- * reader's own.
  */
 
 export const runtime = "nodejs";
@@ -65,11 +74,31 @@ export async function POST(request: Request): Promise<Response> {
     throw error;
   }
 
+  // Who is reading, and the list their reading is answerable to. Both are
+  // settled before the model is asked anything, because the list is an input to
+  // the reading and not a note about it.
+  const session = await readSession();
+  const inForce = await redLinesFor(session.access, session.viewer);
+
+  if (!inForce.ok) {
+    // Reading this reader against the seeded list instead would hand them a
+    // statement that is not about what they refuse: clause types they took off
+    // would come back, and the tiers they set would be somebody else's. Saying
+    // nothing came back is the honest answer.
+    console.error(
+      "[analyze] the reader's red lines would not open, so nothing was read",
+    );
+    return refuse(
+      503,
+      "Redline could not open your red lines, so it has not read the document. Any statement it gave you now would be against the wrong list. Give it a minute and put the document in again.",
+    );
+  }
+
   let analysis;
   try {
     analysis = await analyze({
       documentText: checked.documentText,
-      redLines: SEED_RED_LINES,
+      redLines: inForce.redLines,
       callModel,
     });
   } catch (error) {
@@ -110,7 +139,13 @@ export async function POST(request: Request): Promise<Response> {
     summary: analysis.summary,
     flags: analysis.flags,
     droppedCount: analysis.dropped.length,
-    saved: await keep(checked.filename, checked.documentText, analysis),
+    saved: await keep(
+      session,
+      inForce.redLines,
+      checked.filename,
+      checked.documentText,
+      analysis,
+    ),
   };
 
   return Response.json(payload);
@@ -126,11 +161,13 @@ export async function POST(request: Request): Promise<Response> {
  * whatever the database said, and the reading goes out regardless.
  */
 async function keep(
+  session: Session,
+  redLinesInForce: readonly RedLine[],
   filename: string,
   documentText: string,
   analysis: Analysis,
 ): Promise<SavedTo> {
-  const { viewer, access } = await readSession();
+  const { viewer, access } = session;
   const gate = gateKeeping(viewer);
   if (!gate.keep) return { kept: false, why: gate.why };
 
@@ -141,7 +178,7 @@ async function keep(
     // The list this reading actually ran against, copied in as data. Editing
     // the live list afterwards leaves this one alone, which is the whole reason
     // a reading is stored rather than read again.
-    redLinesInForce: SEED_RED_LINES,
+    redLinesInForce,
     flags: analysis.flags,
   });
 

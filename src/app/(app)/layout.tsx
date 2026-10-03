@@ -1,5 +1,9 @@
 import Link from "next/link";
-import { LIBRARY_PATH, SIGN_IN_PATH } from "@/lib/supabase/access.ts";
+import {
+  LIBRARY_PATH,
+  RED_LINES_PATH,
+  SIGN_IN_PATH,
+} from "@/lib/supabase/access.ts";
 import { readViewer } from "@/lib/supabase/server.ts";
 import { signOut } from "./account-actions.ts";
 import styles from "./app.module.css";
@@ -11,9 +15,9 @@ import styles from "./app.module.css";
  * Direction contract: .impeccable/surfaces/src-app-app-layout-tsx.md. The head
  * runs across the top because the arrangement this refuses is the dashboard —
  * a sidebar of icons, a grid of tiles, a chart of severity over time, none of
- * which can be checked against the document. The library and the way in and out
- * of an account are reached from this head for the same reason: the brief gives
- * them no sidebar to live in.
+ * which can be checked against the document. The red lines, the library and the
+ * way in and out of an account are reached from this head for the same reason:
+ * the brief gives them no sidebar to live in.
  */
 
 export default async function AppLayout({
@@ -35,6 +39,9 @@ export default async function AppLayout({
                 <span className={styles.accountWho}>
                   {viewer.email ?? "Signed in"}
                 </span>
+                <Link className={styles.accountLink} href={RED_LINES_PATH}>
+                  Your red lines
+                </Link>
                 <Link className={styles.accountLink} href={LIBRARY_PATH}>
                   Library
                 </Link>

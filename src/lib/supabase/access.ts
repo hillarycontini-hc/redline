@@ -10,6 +10,7 @@
 
 export const SIGN_IN_PATH = "/sign-in";
 export const LIBRARY_PATH = "/library";
+export const RED_LINES_PATH = "/red-lines";
 export const READ_PATH = "/read";
 
 export type Viewer =
@@ -19,6 +20,11 @@ export type Viewer =
 
 export type LibraryGate =
   | { show: "library"; userId: string }
+  | { show: "no-accounts"; missing: readonly string[] }
+  | { show: "sign-in-first"; goTo: string };
+
+export type RedLinesGate =
+  | { show: "red-lines"; userId: string }
   | { show: "no-accounts"; missing: readonly string[] }
   | { show: "sign-in-first"; goTo: string };
 
@@ -46,6 +52,24 @@ export function gateLibrary(viewer: Viewer): LibraryGate {
     return { show: "sign-in-first", goTo: signInPathFor(LIBRARY_PATH) };
   }
   return { show: "library", userId: viewer.userId };
+}
+
+/**
+ * Whether this request gets the reader's own red lines.
+ *
+ * The same three answers as the library, for the same reason: the list is one
+ * account's and nobody else's. It matters more here than it does there, because
+ * this list decides what every later reading shows — a stranger who could edit
+ * it could decide what somebody else is told about their own contract.
+ */
+export function gateRedLines(viewer: Viewer): RedLinesGate {
+  if (viewer.state === "no-accounts") {
+    return { show: "no-accounts", missing: viewer.missing };
+  }
+  if (viewer.state === "signed-out") {
+    return { show: "sign-in-first", goTo: signInPathFor(RED_LINES_PATH) };
+  }
+  return { show: "red-lines", userId: viewer.userId };
 }
 
 /**

@@ -134,6 +134,20 @@
   color: var(--ink-3);
 }
 
+/* A field the reader writes a sentence into rather than a word. */
+.fieldTall {
+  min-height: 5.5rem;
+  resize: vertical;
+}
+
+.fieldNote {
+  margin-top: 0.4rem;
+  max-width: 54ch;
+  color: var(--ink-3);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
 .actions {
   margin-top: 1.4rem;
   padding-top: 1rem;
@@ -369,6 +383,176 @@
   font-size: 0.78rem;
 }
 
+/* ---------------------------------------------------------------- red lines */
+
+/* The same two columns the library and the statement use: what it is on the
+   left, what it costs in the amount column on the right. Here the amount is
+   the tier, and it is a control rather than a printed figure, because this is
+   the one screen where the reader sets it. One grid definition for the column
+   head row and every line, so a column cannot be added to one without the
+   other. */
+.redLinesHead,
+.redLineRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 13rem;
+  gap: 1.75rem;
+  align-items: baseline;
+}
+
+.redLinesHead {
+  margin-top: 1.4rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.redLinesHead > :last-child,
+.redLineRow > :last-child {
+  margin-right: calc(clamp(1.25rem, 3vw, 2.75rem) * -1);
+  padding-right: clamp(1.25rem, 3vw, 2.75rem);
+  background: var(--field-head);
+}
+
+.redLineRow {
+  padding: 1.15rem 0;
+  border-bottom: 1px solid var(--rule-hair);
+}
+
+.redLineMain {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 0.9rem;
+  min-width: 0;
+}
+
+.redLineLabel {
+  font-size: 1.08rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+
+/* The name the flag itself carries. Shown because a reader comparing a flag on
+   a statement with the entry that produced it has nothing else to match on. */
+.redLineType {
+  font-family: var(--font-archivo-narrow), var(--font-archivo), sans-serif;
+  color: var(--ink-3);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  overflow-wrap: anywhere;
+}
+
+/* What Redline is told to look for. The reader's own words, or the seeded
+   ones, so it is set as the document is: behind a hairline, at note size. */
+.redLineLook {
+  flex-basis: 100%;
+  padding-left: 0.85rem;
+  border-left: 1px solid var(--rule-hair);
+  max-width: 62ch;
+  color: var(--ink-2);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.redLineNotice {
+  flex-basis: 100%;
+  padding-left: 0.85rem;
+  border-left: 1px solid var(--rule);
+  max-width: 54ch;
+  color: var(--ink);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* The tier, in the amount column, set to the right the way a figure is. */
+.tierForm {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  padding-top: 0.1rem;
+}
+
+.tierFieldLabel {
+  display: block;
+}
+
+.tierFieldWrap {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+}
+
+/* The caret, so a tier that can be changed looks like one. A glyph rather than
+   an image: there is no raster in this world that is not type or a rule. */
+.tierFieldWrap::after {
+  content: "\25BE";
+  position: absolute;
+  right: 0.1rem;
+  bottom: 0.35rem;
+  color: var(--ink-3);
+  font-size: 0.7rem;
+  pointer-events: none;
+}
+
+/* The select carries the tier's own colour and its own accounting rule, so the
+   tier reads as one of three words with the colour removed as well as with it.
+   Never a number, never a bar. */
+.tierField {
+  font-family: var(--font-archivo-narrow), var(--font-archivo), sans-serif;
+  appearance: none;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  padding: 0 1.1rem 0.3rem 0;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: right;
+  cursor: pointer;
+}
+
+.tierFieldCritical {
+  color: var(--due);
+  border-bottom: 3px double var(--due);
+}
+
+.tierFieldSerious {
+  color: var(--ochre);
+  border-bottom: 1px solid var(--ochre);
+}
+
+.tierFieldWorth {
+  color: var(--carbon);
+  border-bottom: 1px dotted var(--carbon);
+}
+
+/* Adding one. Below the list and behind the statement's double rule, because
+   it is a new entry on an account rather than a line already on it. */
+.addRedLine {
+  margin-top: 2.1rem;
+  padding-top: 1rem;
+  border-top: 3px double var(--rule);
+}
+
+.addHead {
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+}
+
+/* Said to a screen reader and not to the page: the column head already names
+   the column, and repeating it on every line would read as noise. */
+.hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 /* ---------------------------------------------------------------- responsive */
 
 @media (max-width: 62rem) {
@@ -398,5 +582,33 @@
     margin-right: 0;
     padding-right: 0;
     background: none;
+  }
+
+  /* Same again for the red lines: stacked, the tier sits under the entry it
+     belongs to and names itself, so the column head row goes. */
+  .redLinesHead {
+    display: none;
+  }
+
+  .redLineRow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+
+  .redLineRow > :last-child {
+    margin-right: 0;
+    padding-right: 0;
+    background: none;
+  }
+
+  .tierForm {
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: flex-start;
+    gap: 0.9rem;
+  }
+
+  .tierField {
+    text-align: left;
   }
 }

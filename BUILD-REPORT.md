@@ -3,19 +3,18 @@
 **All nine tickets are built. 190 tests pass, the build is clean, and the fixture contract goes
 through the real model end to end with 8 of 8 source sentences verified.**
 
-**Four things need you**, in the order I would do them: run the Supabase migrations, supply ten
-real gold-set documents, switch on branch protection, and look at the desktop layout once.
+**Three things need you**, in the order I would do them: run the Supabase migrations, supply ten
+real gold-set documents, and look at the desktop layout once. Branch protection is on.
 
 ---
 
-## The four things that need you
+## The three things that need you
 
 | | What | Why it is yours | Where |
 |---|---|---|---|
 | 1 | **Run the Supabase migrations** | No project exists. Nine criteria across tickets 07–09 cannot be demonstrated without one. | `supabase/migrations/README.md` |
 | 2 | **Ten real gold-set documents** | A synthetic document tests Redline against whoever wrote it. `pnpm gates` exits non-zero until they arrive, by design. | `gold-set/README.md` |
-| 3 | **Switch on branch protection** | A repo setting, not code. My attempt was blocked, correctly, for an unattended build. | one `gh` command, below |
-| 4 | **Look at `/read` at desktop width** | Chrome would not resize on this machine, so I verified the layout at 390px and 500px only. | 30 seconds |
+| 3 | **Look at `/read` at desktop width** | Chrome would not resize on this machine, so I verified the layout at 390px and 500px only. | 30 seconds |
 
 [CONFIRM] One open question I could not answer: **is email confirmation on for the Supabase
 project?** If it is, sign-up ends on "open the link we emailed you" rather than landing in the
@@ -44,7 +43,7 @@ corepack pnpm verify:rls       # proves no account can read another's rows
 
 | # | Ticket | Status |
 |---|---|---|
-| 01 | CI keeps every flag honest | **done**, except branch protection (needs you) |
+| 01 | CI keeps every flag honest | **done**; branch protection on, requiring `Gates` |
 | 02 | Analyse a plain-text document and show cited flags | **done**, verified against the live model |
 | 03 | Open a flag and see what it owes you | **done**, verified against the live model |
 | 04 | Question box | **done**, verified against the live model |
@@ -179,37 +178,45 @@ it.
 
 ---
 
-## Blocked, and needs you
+## Branch protection — done 2026-10-05
 
-### Ticket 01, criterion 4 — a pull request cannot merge while CI is failing
+**`master` now requires the `Gates` check to pass before a pull request can merge.** That closes
+ticket 01's last criterion, so ticket 01 is fully done.
 
-**Everything else in ticket 01 is done and verified green on GitHub.** The workflow runs, the
-check is named `Gates`, and run `37055714812` passed on master.
+| Setting | Value |
+|---|---|
+| Required check | `Gates` |
+| Strict (branch must be up to date with base) | off |
+| Enforce for admins | off — you can still push a hotfix to master directly |
+| Force pushes | blocked |
+| Branch deletion | blocked |
 
-What is missing is branch protection, which is a repository setting rather than code. I tried to
-set it and the permission layer blocked the call, which is the right outcome — changing the
-settings of a public repository is not something a build should do unattended. I did not look for
-a way around it.
+During the unattended run the permission layer blocked this call, which was the right outcome:
+changing a public repository's settings is not something a build should do on its own. It was run
+later, with you watching.
 
-**Run this when you sit down** (one command, and it is reversible):
+**The command I first wrote here was wrong, and worth knowing why.** `gh api -f` sends every value
+as a string, so `required_status_checks[strict]=false` arrived as the string `"false"` and GitHub
+answered `422: "false" is not a boolean`. Nested objects need a typed JSON body instead:
 
 ```bash
+cat > protection.json <<'JSON'
+{
+  "required_status_checks": { "strict": false, "contexts": ["Gates"] },
+  "enforce_admins": false,
+  "required_pull_request_reviews": null,
+  "restrictions": null
+}
+JSON
+
 gh api -X PUT repos/hillarycontini-hc/redline/branches/master/protection \
-  -H "Accept: application/vnd.github+json" \
-  -f 'required_status_checks[strict]=false' \
-  -f 'required_status_checks[contexts][]=Gates' \
-  -F 'enforce_admins=false' \
-  -F 'required_pull_request_reviews=null' \
-  -F 'restrictions=null'
+  -H "Accept: application/vnd.github+json" --input protection.json
 ```
 
-Or in the browser: **Settings → Branches → Add branch ruleset** on `master`, tick **Require
-status checks to pass**, and add **`Gates`**.
+To undo it: `gh api -X DELETE repos/hillarycontini-hc/redline/branches/master/protection`.
 
-`enforce_admins=false` is deliberate: it lets you still push a hotfix to master directly. Set it
-to `true` if you would rather the gate bind you as well.
-
----
+**Do not add `pnpm gates` to CI.** It exits non-zero by design while the gold set holds no real
+documents. With protection now on, that would block every merge.
 
 ## The smoke run, against the real model
 
@@ -495,26 +502,6 @@ reading cannot reach the model.
 
 Two things about the desktop layout and the provider rate limit are covered in their own sections
 above.
-
----
-
-## Branch protection, the exact command
-
-```bash
-gh api -X PUT repos/hillarycontini-hc/redline/branches/master/protection \
-  -H "Accept: application/vnd.github+json" \
-  -f 'required_status_checks[strict]=false' \
-  -f 'required_status_checks[contexts][]=Gates' \
-  -F 'enforce_admins=false' \
-  -F 'required_pull_request_reviews=null' \
-  -F 'restrictions=null'
-```
-
-Or: **Settings → Branches → Add branch ruleset** on `master`, tick **Require status checks**, add
-**`Gates`**.
-
-**Do not add `pnpm gates` to CI yet.** It exits non-zero by design while the gold set holds no real
-documents, so it would fail every build. Add it once they land.
 
 ---
 

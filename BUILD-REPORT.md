@@ -3,18 +3,17 @@
 **All nine tickets are built. 190 tests pass, the build is clean, and the fixture contract goes
 through the real model end to end with 8 of 8 source sentences verified.**
 
-**Three things need you**, in the order I would do them: run the Supabase migrations, supply ten
-real gold-set documents, and look at the desktop layout once. Branch protection is on.
+**Two things need you**: run the Supabase migrations, and supply ten real gold-set documents.
+Branch protection is on and the desktop layout is checked.
 
 ---
 
-## The three things that need you
+## The two things that need you
 
 | | What | Why it is yours | Where |
 |---|---|---|---|
 | 1 | **Run the Supabase migrations** | No project exists. Nine criteria across tickets 07–09 cannot be demonstrated without one. | `supabase/migrations/README.md` |
 | 2 | **Ten real gold-set documents** | A synthetic document tests Redline against whoever wrote it. `pnpm gates` exits non-zero until they arrive, by design. | `gold-set/README.md` |
-| 3 | **Look at `/read` at desktop width** | Chrome would not resize on this machine, so I verified the layout at 390px and 500px only. | 30 seconds |
 
 [CONFIRM] One open question I could not answer: **is email confirmation on for the Supabase
 project?** If it is, sign-up ends on "open the link we emailed you" rather than landing in the
@@ -249,86 +248,26 @@ under deadline pressure should not have to guess. **A single automatic retry on 
 is the obvious fast follow**, and it is not in any ticket, so I have not built it. I would not add
 it silently: retrying a model call has a cost, and that is your call to make.
 
-### What I could not verify, and why — the desktop layout
+### The desktop layout — checked 2026-10-05
 
-Chrome on this machine refuses to resize its window below or above roughly 500px wide; every
-`resize_window` call reports success and the viewport does not move. So **I checked the reading
-surface at 500px and at 390px, but never at a real desktop width in a browser.**
+During the unattended run Chrome would not resize on this machine, so the reading surface was
+only ever seen at 390px and 500px. It has now been checked at a real desktop width, and the one
+behaviour I could not see is confirmed: **selecting a flag at the foot of the list scrolls the
+document column to its sentence and the sentence is on screen**, with the column held in place
+beside the entries.
 
-What I did verify instead, and what still stands:
+Two things were confirmed at the same time. The highlight's rule survives a line wrap, so
+`box-decoration-break: clone` is doing its job. And the tier colours are right — Critical draws
+red, Worth knowing draws carbon violet, and red appears at Critical alone.
 
-- Every highlighted span is **verbatim in the document** — checked against all eight flags on a
-  live reading, by comparing the rendered mark to the fixture file. That is the invariant, and it
-  holds.
-- Critical and Serious entries show replacement wording; both Worth-knowing entries say
-  "No counter-offer" and show none.
-- No horizontal overflow at 390px, and nothing wider than the viewport.
-- The sticky document column and the red underline with `box-decoration-break: clone` are in the
-  stylesheet and match what `DESIGN.md` specifies.
-
-**Worth half a minute when you sit down:** open `/read` at full width, put the fixture in, and
-click a flag near the bottom of the list. The thing to watch is whether the document column holds
-its place and the marked sentence is actually on screen. That is the one behaviour I specified and
-could not see with my own eyes.
-
-### The shared provider pool rate-limits this model, hard
-
-Three of my live checks came back `429` from Fireworks:
-
-> `z-ai/glm-5.3-flash is temporarily rate-limited upstream ... limit_source: upstream_provider_shared_pool`
-
-Because the provider is pinned with `allow_fallbacks: false` — which you asked for, and which is
-right, since a fallback host would quietly give the same document a different reading — there is
-no second provider to absorb this. The call fails instead.
-
-The build handles it correctly: a `429` is now its own error with its own words, so a reader is
-told the service is busy rather than being sent to look for a fault in their document. But this
-will reach real readers under deadline pressure.
-
-**The remedy OpenRouter itself suggests is a bring-your-own-key integration** — add a Fireworks
-key at `https://openrouter.ai/settings/integrations` and the limits become yours rather than the
-shared pool's. That is an account change with a cost attached, so it is yours to make, not mine.
-
-### D7 — PDF.js's `legacy` build, and why the extra 1.2 MB is right
-
-The PDF path imports `pdfjs-dist/legacy/build/pdf.mjs` rather than the generic build. That carries
-about 1.2 MB of polyfill, so it needs a reason.
-
-The generic build calls `Uint8Array.prototype.toHex`, which Node 24 does not have — it throws on
-every document under `node --test` — and which only reached browsers in late 2025. Two
-consequences, and the second is the one that decided it:
-
-1. The test suite could not run the real parser at all. It would have had to mock `pdfjs-dist`,
-   which is mocking the thing under test, and would have proved nothing.
-2. Any reader a year behind on their browser would get a failure rather than a reading.
-
-The cost is paid only by someone who actually opens a PDF — `pdf.ts` is a dynamic import, so a
-reader who pastes their agreement never downloads a byte of it. **If you later decide to require
-a 2026-or-newer browser, switching to the generic build is a one-line change and saves 1.2 MB.**
-
-### D8 — A third refusal: the file that will not open
-
-A damaged or password-locked PDF was going to be reported as a scan. Those are different problems
-with different things to do about them, and telling someone their contract is a photograph when it
-is actually password-locked sends them looking in the wrong place. There are now three outcomes: a
-kind we do not read, a PDF whose pages are pictures, and a file that would not open at all.
-
-### A latent bug caught on the way through ticket 05
-
-Git was corrupting the hand-built PDF fixture. `text=auto` reads a file as text when it is mostly
-ASCII and carries no NUL byte, which a small PDF is, so it was converting line endings on
-checkout. A PDF's cross-reference table is a list of byte offsets into the file, so one converted
-line ending shifts every offset after it and the document stops opening.
-
-A fresh checkout already differed from the working tree at byte 9. The parse tests passed here and
-would have failed on your machine. `.gitattributes` now says `*.pdf binary` and `*.docx binary`
-explicitly, and all four binary fixtures were verified byte-identical across a fresh checkout.
-
-Worth knowing because it is the same class of problem as the LF pinning at the start of this run:
-**the thing that breaks a build like this is rarely the code, it is the bytes arriving different
-on the next machine.**
+**One thing was wrong and is fixed.** The document box was capped at 32rem, so on a tall screen it
+filled a third of the column and left the rest empty while the entries ran on beside it. It now
+grows with the viewport, less the room the head and the action need. On a 1430px window the box
+went from 512px to 1206px, which is the difference between seeing a flagged sentence and seeing
+the paragraph it sits in. Re-checked at 390x844, 768x1024, 1440x900 and 1440x600.
 
 ---
+
 ## A defect the release gate caught, and the fix
 
 **The gate earned its keep on its first live run.** It failed `clean-agreement` on the one
@@ -500,8 +439,8 @@ Everything that could be pulled below the database line **is** tested for real: 
 validation, the gate, the id check, the round trip, and the import-graph walk proving a reopened
 reading cannot reach the model.
 
-Two things about the desktop layout and the provider rate limit are covered in their own sections
-above.
+The provider rate limit has its own section above. The desktop layout, which was the other thing
+left unverified, has since been checked and one fault in it fixed.
 
 ---
 

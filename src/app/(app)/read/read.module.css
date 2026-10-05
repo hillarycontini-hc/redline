@@ -111,9 +111,16 @@
 .documentText {
   margin-top: 0.9rem;
   padding: 0.85rem 0.95rem;
-  /* Held to the viewport so the whole column, head and action included, stays
-     on screen while it is stuck. */
-  max-height: min(32rem, 58vh);
+  /* Grows with the viewport, less the room the column head and the action
+     beneath it need, so the whole column stays on screen while it is stuck.
+     A flat cap left most of a tall screen empty while the entries ran on for
+     thousands of pixels beside it, and the document is the thing the reader
+     is checking us against -- it should get the height there is.
+
+     dvh rather than vh so a phone's disappearing browser chrome does not make
+     the box taller than the screen. The floor keeps it readable on a short
+     window, where the column is no longer stuck and the page simply scrolls. */
+  max-height: max(20rem, calc(100dvh - 14rem));
   overflow-y: auto;
   background: var(--sheet);
   border: 1px solid var(--rule-soft);

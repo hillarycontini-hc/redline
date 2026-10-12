@@ -63,7 +63,7 @@ worthless when the text it points at was misread.
 
 - The default branch is `master`, not `main`.
 - The repo is **public**. Assume anything committed is world-readable.
-- The repo moved out of OneDrive on 2026-09-11 and now lives at `C:\Users\ericj\Claude\redline`.
+- The repo moved out of OneDrive on 2026-09-11 and now lives at `C:\dev\redline`.
   If a sync-conflict file ever turns up anyway, do not commit it.
 
 <!-- BEGIN:nextjs-agent-rules -->
